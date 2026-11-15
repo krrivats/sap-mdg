@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "historyId": "0c58a7f4-bacd-486c-942f-85c86340b50a",
+  "currentRevision": null,
+  "pendingChanges": false,
+  "files": {
+    "index.html": {
+      "hash": "42890e30ae7b6f3dde852af4fd6803c4e3f2adda54a8ce91a8df3c041b2f8883",
+      "content": "C:\\Users\\Arti\\.cache\\hyperframes\\history\\0c58a7f4-bacd-486c-942f-85c86340b50a\\blobs\\42\\42890e30ae7b6f3dde852af4fd6803c4e3f2adda54a8ce91a8df3c041b2f8883"
+    },
+    "package.json": {
+      "hash": "3a2d6260b8d4551b67e4304e3f8f491bdc3b6abd6824a40b30730b8fbb9d35b2",
+      "content": "C:\\Users\\Arti\\.cache\\hyperframes\\history\\0c58a7f4-bacd-486c-942f-85c86340b50a\\blobs\\3a\\3a2d6260b8d4551b67e4304e3f8f491bdc3b6abd6824a40b30730b8fbb9d35b2"
+    }
+  },
+  "revisions": {},
+  "checks": {
+    "latest": {
+      "revision": null,
+      "id": "be6f6941-a931-4874-a06c-e3d88b8d815f"
+    },
+    "revisions": {},
+    "unversioned": [
+      {
+        "id": "be6f6941-a931-4874-a06c-e3d88b8d815f",
+        "scope": "project",
+        "report": "D:\\Claude\\Projects\\sap-mdg-learning-lab\\video-ui-modeling\\.hyperframes\\artifacts\\checks\\be6f6941-a931-4874-a06c-e3d88b8d815f.json",
+        "metadata": {
+          "ok": true,
+          "browserSkipped": false,
+          "options": {
+            "samples": 9,
+            "atTransitions": false,
+            "maxIssues": 80,
+            "collapseStatic": true,
+            "tolerance": 2,
+            "timeout": 10000,
+            "contrast": true,
+            "strict": false,
+            "snapshots": false,
+            "browserGpuMode": "auto"
+          }
+        },
+        "createdAt": 1794763559969,
+        "contentHash": "b911a1caf17ed12974f3547ea8e3511e50c78630df03ff25ab75f742e5ca63d2",
+        "revision": null,
+        "inputFingerprint": "29070dac2ee4a0af5709a20a8818f7b856858d037cd733ae0e7e844492561e51",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      }
+    ]
+  },
+  "snapshots": {
+    "latest": {
+      "revision": null,
+      "id": "5f5f0610-e796-48bf-afed-53a243c6d351-4"
+    },
+    "revisions": {},
+    "unversioned": [
+      {
+        "scope": "full",
+        "id": "5f5f0610-e796-48bf-afed-53a243c6d351-0",
+        "image": "D:\\Claude\\Projects\\sap-mdg-learning-lab\\video-ui-modeling\\.hyperframes\\artifacts\\snapshots\\401b29a9-4f3f-42ca-b250-4cd59f069eca\\frame-00-at-0s.png",
+        "time": 0,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794763753399,
+        "contentHash": "0083d81d865d984b1a0be70235a64f8a4b49b3049942ca0f90a4adec4b75b7eb",
+        "revision": null,
+        "inputFingerprint": "29070dac2ee4a0af5709a20a8818f7b856858d037cd733ae0e7e844492561e51",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "5f5f0610-e796-48bf-afed-53a243c6d351-1",
+        "image": "D:\\Claude\\Projects\\sap-mdg-learning-lab\\video-ui-modeling\\.hyperframes\\artifacts\\snapshots\\401b29a9-4f3f-42ca-b250-4cd59f069eca\\frame-01-at-6s.png",
+        "time": 6,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794763753399,
+        "contentHash": "17fb8e160343a7fc8f773f4778bbdad78d1e41fa601902553823edc0b613bd04",
+        "revision": null,
+        "inputFingerprint": "29070dac2ee4a0af5709a20a8818f7b856858d037cd733ae0e7e844492561e51",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "5f5f0610-e796-48bf-afed-53a243c6d351-2",
+        "image": "D:\\Claude\\Projects\\sap-mdg-learning-lab\\video-ui-modeling\\.hyperframes\\artifacts\\snapshots\\401b29a9-4f3f-42ca-b250-4cd59f069eca\\frame-02-at-12s.png",
+        "time": 12,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794763753399,
+        "contentHash": "ea6c8e758313f1bdfce66869c5cc556f3d60aadf2eeb9cadf1dcbf622f89b508",
+        "revision": null,
+        "inputFingerprint": "29070dac2ee4a0af5709a20a8818f7b856858d037cd733ae0e7e844492561e51",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "5f5f0610-e796-48bf-afed-53a243c6d351-3",
+        "image": "D:\\Claude\\Projects\\sap-mdg-learning-lab\\video-ui-modeling\\.hyperframes\\artifacts\\snapshots\\401b29a9-4f3f-42ca-b250-4cd59f069eca\\frame-03-at-18s.png",
+        "time": 18,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794763753400,
+        "contentHash": "72f486abe0cd47ded7268f578567bf7a6b8bcce4f1ba9c0e756fd9e3fc3b647b",
+        "revision": null,
+        "inputFingerprint": "29070dac2ee4a0af5709a20a8818f7b856858d037cd733ae0e7e844492561e51",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "5f5f0610-e796-48bf-afed-53a243c6d351-4",
+        "image": "D:\\Claude\\Projects\\sap-mdg-learning-lab\\video-ui-modeling\\.hyperframes\\artifacts\\snapshots\\401b29a9-4f3f-42ca-b250-4cd59f069eca\\frame-04-at-23.75s.png",
+        "time": 23.75,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794763753400,
+        "contentHash": "8cbbf3be80922579473f729ec6786380c54cc8872856f83cc8ff10bc73210b60",
+        "revision": null,
+        "inputFingerprint": "29070dac2ee4a0af5709a20a8818f7b856858d037cd733ae0e7e844492561e51",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      }
+    ]
+  },
+  "renders": {
+    "latest": {
+      "id": "24ebbfa4-27d5-4729-8169-dfc85c0a3009",
+      "completedAt": 1794763710237,
+      "output": "D:\\Claude\\Projects\\sap-mdg-learning-lab\\video-ui-modeling\\renders\\video-ui-modeling_2026-11-15_22-56-13.mp4",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
+}

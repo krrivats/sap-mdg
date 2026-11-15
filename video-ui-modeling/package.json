@@ -1,0 +1,13 @@
+{
+  "name": "sap-mdg-ui-modeling-explainer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "24-second explainer about SAP MDG UI modeling",
+  "scripts": {
+    "preview": "npx hyperframes preview",
+    "render": "npx hyperframes render",
+    "lint": "npx hyperframes lint",
+    "check": "npx hyperframes check",
+    "snapshot": "npx hyperframes snapshot"
+  }
+}

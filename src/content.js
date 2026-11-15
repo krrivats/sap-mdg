@@ -508,7 +508,8 @@ export const lessons = [
         'Keep entry, review, and error fixing separate.',
         'Test with a real person. Do not coach them.'
       ] },
-      { k: 'note', tone: 'exam', t: 'Interview point', b: 'A correct model with a confusing screen still gives you bad data. The screen is part of the control, not decoration.' }
+      { k: 'video', t: 'Watch the 24-second explainer', b: 'See the data model become a screen: grouped, labeled, and guided.', url: './assets/ui-modeling-explainer.mp4' },
+      { k: 'note', tone: 'exam', t: 'Interview point', b: 'A correct model with a confusing screen still gives you bad data. The screen is part of the control, not decoration.' },
     ],
     recall: [{ q: 'What should decide the screen layout?', a: 'The user’s task, the role, and the data links. Not the order of the tables.' }],
     interview: [

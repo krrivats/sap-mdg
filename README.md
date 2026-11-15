@@ -25,6 +25,7 @@ npm test        # unit tests for search, progress, and the interview bank
 - **19 inline SVG diagrams** (no external assets), so it still works on GitHub Pages.
 - **Mobile-first**: compact layout, slide-in menu drawer, bottom tab bar (Home / Learn / Interview / Search), swipeable diagrams, and 16px inputs so iOS does not auto-zoom.
 - **Mobile-first layout**: slide-in module drawer, bottom tab bar (Home / Learn / Interview / Search), compact cards, and 16px inputs so iOS does not auto-zoom.
+- **24-second explainer video**: "UI modeling in 24 seconds" — data model → screen → process, hosted in the repo.
 - **Dark and light themes**, persisted locally.
 - **Command palette** (`Ctrl/Cmd + K`) to jump to any lesson or interview question.
 - **Progress ring**, lesson completion, and field notes saved in `localStorage`.
