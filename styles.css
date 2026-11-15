@@ -433,6 +433,52 @@ td:first-child { color: var(--ink); font-weight: 500; }
 .palette-empty { padding: 1rem; color: var(--muted); font-size: .84rem; }
 .palette-hint { display: flex; gap: 1rem; padding: .5rem 1rem; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: .58rem; color: var(--muted); }
 
+/* T-codes & IMG paths */
+.codes-link { margin-top: .4rem; }
+.codes-hero .hero-copy { max-width: 100%; }
+.codes-tabs { display: flex; gap: .4rem; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: .5rem; }
+.codes-tab { border: 1px solid var(--line-strong); background: var(--panel); color: var(--ink-soft); border-radius: 999px; padding: .42rem .85rem; font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; }
+.codes-tab.is-active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.code-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: .75rem; }
+.code-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: .9rem 1rem; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
+.code-card:target, .code-card.is-highlight { border-color: var(--accent); }
+.code-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.code-badge { font-family: var(--font-mono); font-weight: 700; font-size: .9rem; background: var(--ink); color: var(--bg); padding: .15rem .5rem; border-radius: 7px; white-space: nowrap; }
+.code-badge-path { background: var(--violet); color: #fff; }
+.code-area { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.code-title { font-family: var(--font-display); font-weight: 500; font-size: 1rem; margin: 0; }
+.code-facts { margin: 0; display: flex; flex-direction: column; gap: .4rem; }
+.code-facts div { display: grid; grid-template-columns: 84px 1fr; gap: .4rem; font-size: .84rem; }
+.code-facts dt { color: var(--muted); font-size: .76rem; font-weight: 600; }
+.code-facts dd { margin: 0; color: var(--ink); }
+.code-facts .trick { color: var(--accent-ink); font-weight: 600; }
+.release-note { margin: 0; font-size: .76rem; color: var(--amber); background: var(--amber-soft); border-radius: 8px; padding: .35rem .5rem; }
+.copy-btn { align-self: flex-start; border: 1px solid var(--line-strong); background: transparent; color: var(--ink-soft); border-radius: 999px; padding: .25rem .7rem; font: inherit; font-size: .72rem; cursor: pointer; }
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+.path-trail { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; }
+.path-trail li { font-size: .78rem; background: var(--panel-2); border: 1px solid var(--line); border-radius: 7px; padding: .2rem .5rem; color: var(--ink); }
+.path-trail li + li::before { content: "›"; color: var(--accent); font-weight: 700; margin-right: .3rem; position: relative; left: -.12rem; }
+.path-trail li:first-child { background: var(--ink); color: var(--bg); border-color: var(--ink); font-family: var(--font-mono); font-weight: 700; }
+.kw-section { margin-top: .6rem; }
+.kw-h { font-family: var(--font-display); font-weight: 500; font-size: 1.1rem; margin: 0 0 .6rem; }
+.kw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: .7rem; }
+.kw-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: .8rem .9rem; display: flex; flex-direction: column; gap: .3rem; }
+.kw-card h4 { margin: 0; font-size: .95rem; font-family: var(--font-display); font-weight: 600; }
+.kw-meaning, .kw-name, .kw-trick { margin: 0; font-size: .82rem; }
+.kw-meaning { color: var(--ink); }
+.kw-name { color: var(--ink-soft); }
+.kw-trick { color: var(--accent-ink); }
+.mono { font-family: var(--font-mono); }
+
+@media (max-width: 820px) {
+  .code-grid, .kw-grid { grid-template-columns: 1fr; }
+  .codes-tabs { overflow-x: auto; flex-wrap: nowrap; }
+  .codes-tab { white-space: nowrap; }
+  .path-trail { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .2rem; }
+  .path-trail li { white-space: nowrap; }
+  .code-facts div { grid-template-columns: 1fr; gap: .1rem; }
+}
+
 .noscript { margin: 2rem; padding: 1rem; background: var(--accent-soft); border-radius: var(--radius); color: var(--accent-ink); }
 
 /* Mobile chrome (hidden until the mobile breakpoint) */

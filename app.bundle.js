@@ -1348,6 +1348,216 @@ const simpleById = {
 };
 
 
+/* src/codes.js */
+// T-codes, IMG paths, and keyword meanings. Plain words, one trick per item.
+// "release" marks items whose screen or menu name can differ by SAP release. Confirm in your system.
+
+const codeAreas = ['All', 'Setup', 'Data', 'Material', 'Finance', 'Workflow', 'Transport', 'Users', 'Troubleshoot'];
+
+const tcodes = [
+  { id: 'spro', code: 'SPRO', area: 'Setup', title: 'Customizing (IMG tree)',
+    use: 'Opens the list of all settings for the system. Every MDG setting starts here.',
+    why: 'Settings are kept in one tree, so they can be saved in a transport and moved to other systems.',
+    trick: 'SPRO = SetUp PROject. Start here for any setting.' },
+  { id: 'mdgimg', code: 'MDGIMG', area: 'Setup', title: 'MDG Implementation Guide',
+    use: 'Opens the IMG and goes straight to the MDG branch.',
+    why: 'Saves you from clicking through the whole tree every time.',
+    trick: 'MDG + IMG = the MDG part of the IMG.',
+    release: 'Your user may need authorization to open it.' },
+  { id: 'se11', code: 'SE11', area: 'Data', title: 'Data Dictionary',
+    use: 'Shows the table, structure, domain, and data element behind a field.',
+    why: 'MDG fields are built from dictionary objects. Check the type and length here when a field looks wrong.',
+    trick: 'SE11 = See the Eleven parts of a definition: table, field, domain, element.' },
+  { id: 'se16', code: 'SE16 / SE16N', area: 'Data', title: 'Data Browser',
+    use: 'Shows the rows inside a table.',
+    why: 'After you activate a model, check the generated table. The rows prove what was saved.',
+    trick: 'SE16 = Show Entries (rows) of a table.' },
+  { id: 'se80', code: 'SE80', area: 'Data', title: 'Object Navigator',
+    use: 'Browse all development objects in one window.',
+    why: 'Custom MDG objects are grouped in packages. This is where you find them.',
+    trick: 'SE80 = one window for everything.' },
+  { id: 'se10', code: 'SE10', area: 'Transport', title: 'Workbench Organizer',
+    use: 'Create and check transport requests for your changes.',
+    why: 'A change made in development must travel to test and production through a transport request.',
+    trick: 'SE10 = your shelf of requests. Pack the change here.' },
+  { id: 'se01', code: 'SE01', area: 'Transport', title: 'Transport Organizer',
+    use: 'Release a transport request so it can be moved.',
+    why: 'Release means: this request is ready to ship.',
+    trick: 'SE01 = Send (release) the parcel.' },
+  { id: 'stms', code: 'STMS', area: 'Transport', title: 'Transport Management System',
+    use: 'See the import queue and check whether a transport reached the target system.',
+    why: 'If a change is missing in test, check here first. It is the shipping dock.',
+    trick: 'STMS = the shipping dock: what arrived, what is waiting.' },
+  { id: 'su01', code: 'SU01', area: 'Users', title: 'User Maintenance',
+    use: 'Create, lock, or change a user.',
+    why: 'Access is given per person, so each person needs their own user.',
+    trick: 'SU = Set a User.' },
+  { id: 'pfcg', code: 'PFCG', area: 'Users', title: 'Role Maintenance',
+    use: 'Build a role from menu entries and authorizations, then assign it to users.',
+    why: 'A role tells the system what a person may open and change.',
+    trick: 'PFCG = Profile Generator. Roles hold profiles.' },
+  { id: 'swdd', code: 'SWDD', area: 'Workflow', title: 'Workflow Builder',
+    use: 'View or change a workflow definition.',
+    why: 'Shows the steps and the agents of a workflow.',
+    trick: 'SW = SAP Workflow. DD = definition.',
+    release: 'Names of workflow tools can differ by release.' },
+  { id: 'swi1', code: 'SWI1', area: 'Workflow', title: 'Work Item Selection',
+    use: 'Shows the work items waiting for a user.',
+    why: 'A stuck request often sits in someone’s work items. Check here to find it.',
+    trick: 'SWI = SAP Workflow Item. Look for the waiting ones.' },
+  { id: 'mm01', code: 'MM01', area: 'Material', title: 'Create Material',
+    use: 'Create a material directly in the ERP.',
+    why: 'After MDG approves a material, you check it in ERP. Use MM03 to look, MM01 only in a test scenario.',
+    trick: '01 = first step: create.' },
+  { id: 'mm02', code: 'MM02', area: 'Material', title: 'Change Material',
+    use: 'Change an existing material.',
+    why: 'Shows the material master in change mode.',
+    trick: '02 = second step: change.' },
+  { id: 'mm03', code: 'MM03', area: 'Material', title: 'Display Material',
+    use: 'Look at a material without changing it.',
+    why: 'Safest way to check what reached ERP after distribution.',
+    trick: '03 = third step: look only.' },
+  { id: 'bp', code: 'BP', area: 'Data', title: 'Business Partner',
+    use: 'Maintain one partner record that can play customer and vendor roles.',
+    why: 'Newer SAP systems keep customers and vendors in one partner record.',
+    trick: 'BP = one partner, many roles.',
+    release: 'Common in S/4HANA. Older ECC systems may use separate customer and vendor screens.' },
+  { id: 'xk01', code: 'XK01', area: 'Finance', title: 'Create Vendor (central)',
+    use: 'Create a vendor in all company codes at once.',
+    why: 'The K stands for Kreditor (creditor). A vendor is a creditor: you owe them money.',
+    trick: 'XK = Kreditor = vendor.' },
+  { id: 'xd01', code: 'XD01', area: 'Finance', title: 'Create Customer (central)',
+    use: 'Create a customer in all company codes at once.',
+    why: 'The D stands for Debitor (debtor). A customer is a debtor: they owe you money.',
+    trick: 'XD = Debitor = customer.' },
+  { id: 'ox02', code: 'OX02', area: 'Finance', title: 'Create Company Code',
+    use: 'Create a company code, the legal unit for accounting.',
+    why: 'Company codes are the first thing a finance master record needs.',
+    trick: 'OX = organization structure. 02 = create.',
+    release: 'Some systems restrict this to the finance team.' },
+  { id: 'fs00', code: 'FS00', area: 'Finance', title: 'G/L Account Master',
+    use: 'Maintain a general ledger (G/L) account.',
+    why: 'MDG-F governs these accounts. FS points to the financial statement.',
+    trick: 'FS = Financial Statement. G/L = main book.' },
+  { id: 'sm21', code: 'SM21', area: 'Troubleshoot', title: 'System Log',
+    use: 'Read system messages.',
+    why: 'If something fails with no clear message, the system log often explains why.',
+    trick: 'SM = System Monitoring.' },
+  { id: 'st22', code: 'ST22', area: 'Troubleshoot', title: 'ABAP Dumps',
+    use: 'See crash records of ABAP programs.',
+    why: 'A dump is a stored report of a program crash. It shows the exact line.',
+    trick: 'ST22 = Short dump. A dump is a crash record.' },
+  { id: 'slg1', code: 'SLG1', area: 'Troubleshoot', title: 'Application Log',
+    use: 'Read logs written by an application, such as a failed distribution.',
+    why: 'Each MDG step can write its own log. This is where the detail is.',
+    trick: 'SLG1 = Simple LoG (application log).' },
+  { id: 'sm37', code: 'SM37', area: 'Troubleshoot', title: 'Job Monitor',
+    use: 'See background jobs and their status.',
+    why: 'Some MDG steps run as background jobs. A job that did not finish shows here.',
+    trick: 'SM37 = Scheduled jobs list.' },
+  { id: 'sm12', code: 'SM12', area: 'Troubleshoot', title: 'Lock Entries',
+    use: 'See which user has locked a record.',
+    why: 'A “locked” error often means someone else still has the record open.',
+    trick: 'SM12 = Stop Me: someone holds the lock.' },
+  { id: 'usmd', code: 'USMD_DATA_MODEL', area: 'Data', title: 'MDG data model check',
+    use: 'Check the structures generated for a data model.',
+    why: 'Shows whether generated structures match your model after activation.',
+    trick: 'USMD = Unified Standard Master Data. Think: check the model’s tables.',
+    release: 'Seen in SAP guides for checking generated structures. Confirm it in your release.' }
+];
+
+const imgPaths = [
+  { id: 'p-data', title: 'Edit the data model', area: 'Data',
+    steps: ['SPRO', 'Master Data Governance', 'General Settings', 'Data Modeling', 'Edit Data Model'],
+    use: 'Create the Z model, its entity types, fields, and links.',
+    why: 'The data model is the blueprint. Everything else reads from it.',
+    trick: 'Data first. Then UI. Then process.' },
+  { id: 'p-ui', title: 'Edit the UI configuration', area: 'Data',
+    steps: ['SPRO', 'Master Data Governance', 'General Settings', 'UI Modeling', 'Edit UI Configuration'],
+    use: 'Build the screens users work on.',
+    why: 'A screen needs a finished model to show.',
+    trick: 'UI comes after Data. Screens show the model.',
+    release: 'In newer systems, the screen may be a Fiori app instead.' },
+  { id: 'p-cr', title: 'Create a change request type', area: 'Workflow',
+    steps: ['SPRO', 'Master Data Governance', 'Process Modeling', 'Change Requests', 'Create Change Request Type'],
+    use: 'Define the kind of change and the steps it follows.',
+    why: 'The request type chooses the route of the request.',
+    trick: 'Process = the route. Request type = which route.' },
+  { id: 'p-steps', title: 'Workflow step numbers', area: 'Workflow',
+    steps: ['SPRO', 'Master Data Governance', 'General Settings', 'Workflow', 'Workflow Step Numbers'],
+    use: 'Assign numbers to workflow steps.',
+    why: 'Each step needs a number so the system knows which step is which.',
+    trick: 'Step numbers = bus stop numbers.',
+    release: 'The node may be named differently in your release. Check with your trainer.' },
+  { id: 'p-stage', title: 'Adjust the staging area', area: 'Data',
+    steps: ['SPRO', 'Master Data Governance', 'General Settings', 'Data Modeling', 'Adjust Staging Area'],
+    use: 'Run after you activate a model, so the draft tables match the model.',
+    why: 'If you skip this, draft data may not fit the new model.',
+    trick: 'Activate, then Adjust. Always in that order.',
+    release: 'Confirm the node location in your release.' },
+  { id: 'p-visual', title: 'Visualize the data model', area: 'Data',
+    steps: ['SPRO', 'Master Data Governance', 'General Settings', 'Data Modeling', 'Edit Data Model', 'Visualize Data Model'],
+    use: 'See a picture of the model you built.',
+    why: 'A picture shows missing or wrong links faster than a list of fields.',
+    trick: 'Look at the picture before you leave the model.' },
+  { id: 'p-mdgimg', title: 'Same data path, starting in MDGIMG', area: 'Data',
+    steps: ['MDGIMG', 'General Settings', 'Data Modeling', 'Edit Data Model'],
+    use: 'The same path as SPRO, but you start at the MDG branch.',
+    why: 'Shorter route when you only work on MDG.',
+    trick: 'MDGIMG = MDG shortcut. Same branches, fewer clicks.' }
+];
+
+const keywords = [
+  { word: 'T-code', meaning: 'A short code that opens a screen.', name: 'Old terminals had few keys. Short codes meant less typing.', trick: 'Type the code, skip the menu.' },
+  { word: 'IMG', meaning: 'The Implementation Guide: the tree of all settings.', name: 'It guides you through the setup steps in order.', trick: 'IMG = the map of settings.' },
+  { word: 'Customizing', meaning: 'Settings you change, without writing code.', name: 'You customize the system to your business.', trick: 'Customize = change settings, not code.' },
+  { word: 'SPRO', meaning: 'Opens the IMG tree.', name: 'Commonly explained as SAP Project Reference Objects, the project setup tree.', trick: 'SPRO = SetUp PROject.' },
+  { word: 'MDGIMG', meaning: 'The IMG, opened at the MDG branch.', name: 'MDG + IMG.', trick: 'MDG inside the IMG.' },
+  { word: 'Namespace (Z, Y)', meaning: 'Letters for objects you create.', name: 'SAP keeps other letters for itself, so your names never clash with SAP names.', trick: 'Z and Y = your own.' },
+  { word: 'Client', meaning: 'A separate company copy inside one system, like 100 or 200.', name: 'Like separate notebooks kept in one cabinet.', trick: 'Client = separate notebook.' },
+  { word: 'Transport request', meaning: 'A package of changes that moves from one system to the next.', name: 'Like a parcel with a delivery note.', trick: 'Transport = parcel to the next system.' },
+  { word: 'Change request (CR)', meaning: 'The MDG envelope for one data change.', name: 'It holds the change, the reason, and the decisions.', trick: 'CR = data envelope.' },
+  { word: 'Staging area', meaning: 'Draft space for data not yet approved.', name: 'A stage is where things wait before the show.', trick: 'Staging = not live yet.' },
+  { word: 'Active area', meaning: 'Approved data that the business uses.', name: 'Active means in use.', trick: 'Active = live.' },
+  { word: 'Data model', meaning: 'The plan of things, fields, and links.', name: 'A model is a small plan of the real thing.', trick: 'Model = blueprint.' },
+  { word: 'Entity type', meaning: 'One business thing, like Material.', name: 'Entity means a thing that exists.', trick: 'Entity = noun.' },
+  { word: 'Attribute', meaning: 'One field of a thing.', name: 'An attribute describes a quality of the thing.', trick: 'Attribute = adjective.' },
+  { word: 'Storage/use type 1–4', meaning: 'The role of an entity: 1 root, 2 pick list in, 3 pick list out, 4 child.', name: 'The number matches the role.', trick: '1 Root, 2 In, 3 Out, 4 Under.' },
+  { word: 'Leading relationship', meaning: 'A link where the parent gives the context.', name: 'It leads the way for the child.', trick: 'Leading = who leads.' },
+  { word: 'Qualifying relationship', meaning: 'A link that adds key fields to the child.', name: 'It qualifies the child: it adds a qualifier.', trick: 'Qualify = add to the key.' },
+  { word: 'Referencing relationship', meaning: 'A link that copies another key in as a field.', name: 'It refers to another object.', trick: 'Refer = point to.' },
+  { word: 'Cardinality', meaning: 'How many records can link to how many.', name: 'Cardinal numbers are counting numbers.', trick: 'Cardinality = count.' },
+  { word: 'Reuse mode', meaning: 'Live data kept in tables that already exist.', name: 'Reuse means use again.', trick: 'Reuse = old house.' },
+  { word: 'Flex mode', meaning: 'MDG builds its own live tables.', name: 'Flexible means adaptable to your model.', trick: 'Flex = build a new house.' },
+  { word: 'Data element', meaning: 'The business meaning and label of a field.', name: 'An element is a basic piece.', trick: 'Element = name tag.' },
+  { word: 'Domain', meaning: 'The technical type and allowed values of a field.', name: 'A domain is a territory with its own rules.', trick: 'Domain = rules.' },
+  { word: 'Check table', meaning: 'A table that proves a value is valid.', name: 'Check means verify.', trick: 'Check table = bouncer.' },
+  { word: 'Value table', meaning: 'A table suggested as the check table.', name: 'Value means the list of values.', trick: 'Value table = suggestion.' },
+  { word: 'Search help (F4)', meaning: 'A pick list the user opens with F4.', name: 'Search means find a value.', trick: 'F4 = pick list.' },
+  { word: 'Workflow', meaning: 'An automatic route for a task.', name: 'A flow of work from person to person.', trick: 'Workflow = conveyor belt.' },
+  { word: 'Agent', meaning: 'Who gets a workflow step.', name: 'An agent acts for someone else.', trick: 'Agent = gets the parcel.' },
+  { word: 'BRFplus', meaning: 'A rule engine for business rules, set up without code.', name: 'BRF = business rule framework.', trick: 'BRF = business rules.' },
+  { word: 'Business Partner (BP)', meaning: 'One record that can play customer and vendor roles.', name: 'A partner is one party with many roles.', trick: 'BP = one partner, many roles.' },
+  { word: 'Company code', meaning: 'The legal unit for accounting.', name: 'The company is the legal entity; the code names it.', trick: 'Company code = legal books.' },
+  { word: 'G/L account', meaning: 'An account in the general ledger.', name: 'General ledger = the main book.', trick: 'G/L = main book.' }
+];
+
+const prefixes = [
+  { p: 'MM', means: 'Materials Management', e: 'MM01 creates a material' },
+  { p: 'XK', means: 'K = Kreditor (creditor = vendor)', e: 'XK01 creates a vendor' },
+  { p: 'XD', means: 'D = Debitor (debtor = customer)', e: 'XD01 creates a customer' },
+  { p: 'FS', means: 'Financial Statement (G/L master data)', e: 'FS00 maintains a G/L account' },
+  { p: 'OX', means: 'Organization structure settings', e: 'OX02 creates a company code' },
+  { p: 'SE', means: 'Software Engineering (ABAP workbench)', e: 'SE11 shows the Data Dictionary' },
+  { p: 'SM', means: 'System Monitoring', e: 'SM21 reads the system log' },
+  { p: 'ST', means: 'System tools and traces', e: 'ST22 shows ABAP dumps' },
+  { p: 'SU', means: 'User administration', e: 'SU01 maintains a user' },
+  { p: 'PF', means: 'Profile (role) generator', e: 'PFCG maintains roles' },
+  { p: 'SW', means: 'SAP Workflow', e: 'SWI1 shows work items' },
+  { p: 'BP', means: 'Business Partner', e: 'BP maintains a partner' }
+];
+
+
 /* src/diagrams.js */
 // Inline SVG diagrams. No external files, no network, works on GitHub Pages.
 const C = {
@@ -1614,6 +1824,9 @@ let iqOrder = interviewQuestions.map((q) => q.id);
 let paletteItems = [];
 let paletteIndex = 0;
 let iqHighlight = null;
+let codesTab = 'tcodes';
+let codesArea = 'All';
+let codesQuery = '';
 
 function loadState() {
   try {
@@ -1659,7 +1872,7 @@ function updateProgress() {
 /* ── Navigation ──────────────────────────────────────────────── */
 function renderNavigation() {
   nav.innerHTML = tracks.map((t) => {
-    const active = view !== 'interview' && t.id === selectedTrack;
+    const active = !['interview', 'codes'].includes(view) && t.id === selectedTrack;
     return `<button class="track-link ${active ? 'is-active' : ''}" type="button" data-track="${esc(t.id)}" ${active ? 'aria-current="page"' : ''}>
       <span class="track-icon" aria-hidden="true">${esc(t.icon)}</span><span>${esc(t.label)}</span>
     </button>`;
@@ -1668,6 +1881,7 @@ function renderNavigation() {
     selectedTrack = b.dataset.track; query = ''; searchInput.value = ''; view = 'overview'; closeDrawer(); render();
   }));
   document.querySelector('#open-interview').classList.toggle('is-active', view === 'interview');
+  document.querySelector('#open-codes').classList.toggle('is-active', view === 'codes');
 }
 
 /* ── Block renderers ─────────────────────────────────────────── */
@@ -1919,11 +2133,114 @@ function iqCard(q) {
   </article>`;
 }
 
+/* ── T-codes & IMG paths ─────────────────────────────────────── */
+function openCodes(tab, id) {
+  view = 'codes';
+  if (tab) codesTab = tab;
+  codesQuery = '';
+  codesArea = 'All';
+  closeDrawer();
+  render();
+  if (id) {
+    requestAnimationFrame(() => document.querySelector(`[data-cid="${CSS.escape(id)}"]`)?.scrollIntoView({ block: 'center', behavior: 'smooth' }));
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function codeMatch(text, term) {
+  return !term || text.toLowerCase().includes(term);
+}
+
+function tcodeCard(c) {
+  return `<article class="code-card" data-cid="${esc(c.id)}">
+    <div class="code-head"><span class="code-badge">${esc(c.code)}</span><span class="code-area">${esc(c.area)}</span></div>
+    <h3 class="code-title">${esc(c.title)}</h3>
+    <dl class="code-facts">
+      <div><dt>Use it for</dt><dd>${esc(c.use)}</dd></div>
+      <div><dt>Why</dt><dd>${esc(c.why)}</dd></div>
+      <div><dt>🧠 Trick</dt><dd class="trick">${esc(c.trick)}</dd></div>
+    </dl>
+    ${c.release ? `<p class="release-note">⚠️ ${esc(c.release)}</p>` : ''}
+    <button type="button" class="copy-btn" data-copy="${esc(c.code)}">Copy code</button>
+  </article>`;
+}
+
+function pathCard(p) {
+  return `<article class="code-card" data-cid="${esc(p.id)}">
+    <div class="code-head"><span class="code-badge code-badge-path">IMG</span><span class="code-area">${esc(p.area)}</span></div>
+    <h3 class="code-title">${esc(p.title)}</h3>
+    <ol class="path-trail" aria-label="IMG path">${p.steps.map((s, i) => `<li><span>${esc(s)}</span></li>`).join('')}</ol>
+    <dl class="code-facts">
+      <div><dt>Use it for</dt><dd>${esc(p.use)}</dd></div>
+      <div><dt>Why</dt><dd>${esc(p.why)}</dd></div>
+      <div><dt>🧠 Trick</dt><dd class="trick">${esc(p.trick)}</dd></div>
+    </dl>
+    ${p.release ? `<p class="release-note">⚠️ ${esc(p.release)}</p>` : ''}
+    <button type="button" class="copy-btn" data-copy="${esc(p.steps.join(' > '))}">Copy path</button>
+  </article>`;
+}
+
+function renderCodes() {
+  breadcrumb.textContent = 'T-codes & IMG paths';
+  const term = codesQuery.trim().toLowerCase();
+  const tabs = [['tcodes', `T-codes (${tcodes.length})`], ['paths', `IMG paths (${imgPaths.length})`], ['keywords', `Keywords (${keywords.length + prefixes.length})`]];
+  let body = '';
+  if (codesTab === 'tcodes') {
+    const list = tcodes.filter((c) => (codesArea === 'All' || c.area === codesArea) && codeMatch(`${c.code} ${c.title} ${c.use} ${c.why} ${c.trick} ${c.area}`, term));
+    body = list.length ? `<div class="code-grid">${list.map(tcodeCard).join('')}</div>` : emptyCodes();
+  } else if (codesTab === 'paths') {
+    const list = imgPaths.filter((p) => (codesArea === 'All' || p.area === codesArea) && codeMatch(`${p.title} ${p.steps.join(' ')} ${p.use} ${p.why} ${p.trick} ${p.area}`, term));
+    body = list.length ? `<div class="code-grid">${list.map(pathCard).join('')}</div>` : emptyCodes();
+  } else {
+    const words = keywords.filter((k) => codeMatch(`${k.word} ${k.meaning} ${k.name} ${k.trick}`, term));
+    const pre = prefixes.filter((p) => codeMatch(`${p.p} ${p.means} ${p.e}`, term));
+    body = `<section class="kw-section"><h3 class="kw-h">Words you will see</h3>${words.length ? `<div class="kw-grid">${words.map((k) => `<article class="kw-card"><h4>${esc(k.word)}</h4><p class="kw-meaning">${esc(k.meaning)}</p><p class="kw-name"><b>Why this name:</b> ${esc(k.name)}</p><p class="kw-trick">🧠 ${esc(k.trick)}</p></article>`).join('')}</div>` : emptyCodes()}</section>
+    <section class="kw-section"><h3 class="kw-h">Code prefixes: the first letters tell the family</h3><div class="table-wrap"><table><thead><tr><th>Prefix</th><th>What it stands for</th><th>Example</th></tr></thead><tbody>${pre.map((p) => `<tr><td><b class="mono">${esc(p.p)}</b></td><td>${esc(p.means)}</td><td>${esc(p.e)}</td></tr>`).join('')}</tbody></table></div></section>`;
+  }
+  const showArea = codesTab !== 'keywords';
+  appContent.innerHTML = `<section class="hero codes-hero">
+    <div class="hero-copy"><p class="eyebrow">SETUP MAP · READ THIS, THEN CLICK IT IN THE SYSTEM</p><h1>T-codes &amp; IMG paths</h1>
+    <p class="lede">A T-code opens a screen. An IMG path shows where a setting lives. Each card has the use, the why, and one trick.</p></div>
+  </section>
+  <div class="codes-tabs" role="tablist" aria-label="Codes sections">${tabs.map(([id, label]) => `<button type="button" role="tab" class="codes-tab ${codesTab === id ? 'is-active' : ''}" aria-selected="${codesTab === id}" data-ctab="${id}">${esc(label)}</button>`).join('')}</div>
+  <div class="iq-tools">
+    <label class="search-box iq-search"><span aria-hidden="true">⌕</span><span class="visually-hidden">Search codes and paths</span><input id="codes-search" type="search" placeholder="Search code, path, or word…" value="${esc(codesQuery)}"></label>
+  </div>
+  ${showArea ? `<div class="chip-row" role="group" aria-label="Filter by area">${codeAreas.map((a) => `<button type="button" class="chip ${a === codesArea ? 'is-active' : ''}" data-carea="${esc(a)}">${esc(a)}</button>`).join('')}</div>` : ''}
+  ${body}`;
+
+  document.querySelectorAll('[data-ctab]').forEach((b) => b.addEventListener('click', () => { codesTab = b.dataset.ctab; render(); }));
+  document.querySelectorAll('[data-carea]').forEach((b) => b.addEventListener('click', () => { codesArea = b.dataset.carea; render(); }));
+  const cs = document.querySelector('#codes-search');
+  cs.addEventListener('input', () => {
+    codesQuery = cs.value;
+    const pos = cs.selectionStart;
+    render();
+    const next = document.querySelector('#codes-search');
+    next.focus();
+    try { next.setSelectionRange(pos, pos); } catch { /* ignore */ }
+  });
+  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    const label = b.textContent;
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied ✓'; }
+    catch { b.textContent = 'Copy not allowed here'; }
+    setTimeout(() => { b.textContent = label; }, 1400);
+  }));
+}
+
+function emptyCodes() {
+  return `<div class="empty-state"><strong>Nothing found</strong><p>Try another word, or choose All.</p></div>`;
+}
+
 /* ── Command palette ─────────────────────────────────────────── */
 function paletteSource() {
   const lessonItems = lessons.map((l) => ({ kind: 'lesson', id: l.id, title: l.title, meta: `${l.track} · ${l.duration}` }));
   const questionItems = interviewQuestions.map((q) => ({ kind: 'interview', id: q.id, title: q.q, meta: `Interview · ${q.track}` }));
-  return [...lessonItems, ...questionItems];
+  const codeItems = [
+    ...tcodes.map((c) => ({ kind: 'code', tab: 'tcodes', id: c.id, title: `${c.code} · ${c.title}`, meta: `T-code · ${c.area}` })),
+    ...imgPaths.map((p) => ({ kind: 'code', tab: 'paths', id: p.id, title: p.title, meta: `IMG path · ${p.area}` }))
+  ];
+  return [...lessonItems, ...questionItems, ...codeItems];
 }
 function renderPalette(text = '') {
   const term = text.trim().toLowerCase();
@@ -1931,7 +2248,7 @@ function renderPalette(text = '') {
   paletteItems = (term ? all.filter((x) => `${x.title} ${x.meta}`.toLowerCase().includes(term)) : all).slice(0, 12);
   paletteIndex = 0;
   paletteResults.innerHTML = paletteItems.length
-    ? paletteItems.map((x, i) => `<button type="button" class="palette-item ${i === 0 ? 'is-active' : ''}" data-pi="${i}"><span class="palette-kind">${x.kind === 'lesson' ? 'LESSON' : 'Q&A'}</span><span class="palette-title">${esc(x.title)}</span><span class="palette-meta">${esc(x.meta)}</span></button>`).join('')
+    ? paletteItems.map((x, i) => `<button type="button" class="palette-item ${i === 0 ? 'is-active' : ''}" data-pi="${i}"><span class="palette-kind">${x.kind === 'lesson' ? 'LESSON' : x.kind === 'code' ? 'CODE' : 'Q&A'}</span><span class="palette-title">${esc(x.title)}</span><span class="palette-meta">${esc(x.meta)}</span></button>`).join('')
     : `<div class="palette-empty">No matches. Try “qualifying”, “type 4”, or “workflow”.</div>`;
   paletteResults.querySelectorAll('[data-pi]').forEach((b) => b.addEventListener('click', () => choosePalette(Number(b.dataset.pi))));
 }
@@ -1939,7 +2256,8 @@ function choosePalette(i) {
   const item = paletteItems[i];
   if (!item) return;
   closePalette();
-  if (item.kind === 'lesson') openLesson(item.id);
+  if (item.kind === 'code') openCodes(item.tab, item.id);
+  else if (item.kind === 'lesson') openLesson(item.id);
   else openInterview(item.id);
 }
 function movePalette(delta) {
@@ -1963,6 +2281,7 @@ function render() {
   updateProgress();
   updateBottomNav();
   if (view === 'interview') { renderInterview(); return; }
+  if (view === 'codes') { renderCodes(); return; }
   if (view === 'lesson') {
     const item = findLesson(lessons, state.activeLesson);
     if (item) { renderLesson(item); return; }
@@ -1975,6 +2294,7 @@ document.querySelector('.brand').addEventListener('click', (e) => { e.preventDef
 const mobileBrand = document.querySelector('.mobile-brand');
 if (mobileBrand) mobileBrand.addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); goHome(); });
 document.querySelector('#open-interview').addEventListener('click', () => openInterview());
+document.querySelector('#open-codes').addEventListener('click', () => openCodes());
 document.querySelector('#theme-toggle').addEventListener('click', toggleTheme);
 const mobileTheme = document.querySelector('#mobile-theme');
 if (mobileTheme) mobileTheme.addEventListener('click', toggleTheme);

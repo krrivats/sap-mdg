@@ -8,6 +8,7 @@ const files = [
   'src/content.js',
   'src/interview.js',
   'src/interview-simple.js',
+  'src/codes.js',
   'src/diagrams.js',
   'src/app.js'
 ];

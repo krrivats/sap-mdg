@@ -1,6 +1,7 @@
 import { lessons, tracks } from './content.js';
 import { interviewQuestions, interviewTracks } from './interview.js';
 import { simpleById } from './interview-simple.js';
+import { codeAreas, tcodes, imgPaths, keywords, prefixes } from './codes.js';
 import { findLesson, searchLessons, summarizeProgress } from './learning.js';
 import { renderDiagram } from './diagrams.js';
 
@@ -25,6 +26,9 @@ let iqOrder = interviewQuestions.map((q) => q.id);
 let paletteItems = [];
 let paletteIndex = 0;
 let iqHighlight = null;
+let codesTab = 'tcodes';
+let codesArea = 'All';
+let codesQuery = '';
 
 function loadState() {
   try {
@@ -70,7 +74,7 @@ function updateProgress() {
 /* ── Navigation ──────────────────────────────────────────────── */
 function renderNavigation() {
   nav.innerHTML = tracks.map((t) => {
-    const active = view !== 'interview' && t.id === selectedTrack;
+    const active = !['interview', 'codes'].includes(view) && t.id === selectedTrack;
     return `<button class="track-link ${active ? 'is-active' : ''}" type="button" data-track="${esc(t.id)}" ${active ? 'aria-current="page"' : ''}>
       <span class="track-icon" aria-hidden="true">${esc(t.icon)}</span><span>${esc(t.label)}</span>
     </button>`;
@@ -79,6 +83,7 @@ function renderNavigation() {
     selectedTrack = b.dataset.track; query = ''; searchInput.value = ''; view = 'overview'; closeDrawer(); render();
   }));
   document.querySelector('#open-interview').classList.toggle('is-active', view === 'interview');
+  document.querySelector('#open-codes').classList.toggle('is-active', view === 'codes');
 }
 
 /* ── Block renderers ─────────────────────────────────────────── */
@@ -330,11 +335,114 @@ function iqCard(q) {
   </article>`;
 }
 
+/* ── T-codes & IMG paths ─────────────────────────────────────── */
+function openCodes(tab, id) {
+  view = 'codes';
+  if (tab) codesTab = tab;
+  codesQuery = '';
+  codesArea = 'All';
+  closeDrawer();
+  render();
+  if (id) {
+    requestAnimationFrame(() => document.querySelector(`[data-cid="${CSS.escape(id)}"]`)?.scrollIntoView({ block: 'center', behavior: 'smooth' }));
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function codeMatch(text, term) {
+  return !term || text.toLowerCase().includes(term);
+}
+
+function tcodeCard(c) {
+  return `<article class="code-card" data-cid="${esc(c.id)}">
+    <div class="code-head"><span class="code-badge">${esc(c.code)}</span><span class="code-area">${esc(c.area)}</span></div>
+    <h3 class="code-title">${esc(c.title)}</h3>
+    <dl class="code-facts">
+      <div><dt>Use it for</dt><dd>${esc(c.use)}</dd></div>
+      <div><dt>Why</dt><dd>${esc(c.why)}</dd></div>
+      <div><dt>🧠 Trick</dt><dd class="trick">${esc(c.trick)}</dd></div>
+    </dl>
+    ${c.release ? `<p class="release-note">⚠️ ${esc(c.release)}</p>` : ''}
+    <button type="button" class="copy-btn" data-copy="${esc(c.code)}">Copy code</button>
+  </article>`;
+}
+
+function pathCard(p) {
+  return `<article class="code-card" data-cid="${esc(p.id)}">
+    <div class="code-head"><span class="code-badge code-badge-path">IMG</span><span class="code-area">${esc(p.area)}</span></div>
+    <h3 class="code-title">${esc(p.title)}</h3>
+    <ol class="path-trail" aria-label="IMG path">${p.steps.map((s, i) => `<li><span>${esc(s)}</span></li>`).join('')}</ol>
+    <dl class="code-facts">
+      <div><dt>Use it for</dt><dd>${esc(p.use)}</dd></div>
+      <div><dt>Why</dt><dd>${esc(p.why)}</dd></div>
+      <div><dt>🧠 Trick</dt><dd class="trick">${esc(p.trick)}</dd></div>
+    </dl>
+    ${p.release ? `<p class="release-note">⚠️ ${esc(p.release)}</p>` : ''}
+    <button type="button" class="copy-btn" data-copy="${esc(p.steps.join(' > '))}">Copy path</button>
+  </article>`;
+}
+
+function renderCodes() {
+  breadcrumb.textContent = 'T-codes & IMG paths';
+  const term = codesQuery.trim().toLowerCase();
+  const tabs = [['tcodes', `T-codes (${tcodes.length})`], ['paths', `IMG paths (${imgPaths.length})`], ['keywords', `Keywords (${keywords.length + prefixes.length})`]];
+  let body = '';
+  if (codesTab === 'tcodes') {
+    const list = tcodes.filter((c) => (codesArea === 'All' || c.area === codesArea) && codeMatch(`${c.code} ${c.title} ${c.use} ${c.why} ${c.trick} ${c.area}`, term));
+    body = list.length ? `<div class="code-grid">${list.map(tcodeCard).join('')}</div>` : emptyCodes();
+  } else if (codesTab === 'paths') {
+    const list = imgPaths.filter((p) => (codesArea === 'All' || p.area === codesArea) && codeMatch(`${p.title} ${p.steps.join(' ')} ${p.use} ${p.why} ${p.trick} ${p.area}`, term));
+    body = list.length ? `<div class="code-grid">${list.map(pathCard).join('')}</div>` : emptyCodes();
+  } else {
+    const words = keywords.filter((k) => codeMatch(`${k.word} ${k.meaning} ${k.name} ${k.trick}`, term));
+    const pre = prefixes.filter((p) => codeMatch(`${p.p} ${p.means} ${p.e}`, term));
+    body = `<section class="kw-section"><h3 class="kw-h">Words you will see</h3>${words.length ? `<div class="kw-grid">${words.map((k) => `<article class="kw-card"><h4>${esc(k.word)}</h4><p class="kw-meaning">${esc(k.meaning)}</p><p class="kw-name"><b>Why this name:</b> ${esc(k.name)}</p><p class="kw-trick">🧠 ${esc(k.trick)}</p></article>`).join('')}</div>` : emptyCodes()}</section>
+    <section class="kw-section"><h3 class="kw-h">Code prefixes: the first letters tell the family</h3><div class="table-wrap"><table><thead><tr><th>Prefix</th><th>What it stands for</th><th>Example</th></tr></thead><tbody>${pre.map((p) => `<tr><td><b class="mono">${esc(p.p)}</b></td><td>${esc(p.means)}</td><td>${esc(p.e)}</td></tr>`).join('')}</tbody></table></div></section>`;
+  }
+  const showArea = codesTab !== 'keywords';
+  appContent.innerHTML = `<section class="hero codes-hero">
+    <div class="hero-copy"><p class="eyebrow">SETUP MAP · READ THIS, THEN CLICK IT IN THE SYSTEM</p><h1>T-codes &amp; IMG paths</h1>
+    <p class="lede">A T-code opens a screen. An IMG path shows where a setting lives. Each card has the use, the why, and one trick.</p></div>
+  </section>
+  <div class="codes-tabs" role="tablist" aria-label="Codes sections">${tabs.map(([id, label]) => `<button type="button" role="tab" class="codes-tab ${codesTab === id ? 'is-active' : ''}" aria-selected="${codesTab === id}" data-ctab="${id}">${esc(label)}</button>`).join('')}</div>
+  <div class="iq-tools">
+    <label class="search-box iq-search"><span aria-hidden="true">⌕</span><span class="visually-hidden">Search codes and paths</span><input id="codes-search" type="search" placeholder="Search code, path, or word…" value="${esc(codesQuery)}"></label>
+  </div>
+  ${showArea ? `<div class="chip-row" role="group" aria-label="Filter by area">${codeAreas.map((a) => `<button type="button" class="chip ${a === codesArea ? 'is-active' : ''}" data-carea="${esc(a)}">${esc(a)}</button>`).join('')}</div>` : ''}
+  ${body}`;
+
+  document.querySelectorAll('[data-ctab]').forEach((b) => b.addEventListener('click', () => { codesTab = b.dataset.ctab; render(); }));
+  document.querySelectorAll('[data-carea]').forEach((b) => b.addEventListener('click', () => { codesArea = b.dataset.carea; render(); }));
+  const cs = document.querySelector('#codes-search');
+  cs.addEventListener('input', () => {
+    codesQuery = cs.value;
+    const pos = cs.selectionStart;
+    render();
+    const next = document.querySelector('#codes-search');
+    next.focus();
+    try { next.setSelectionRange(pos, pos); } catch { /* ignore */ }
+  });
+  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    const label = b.textContent;
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied ✓'; }
+    catch { b.textContent = 'Copy not allowed here'; }
+    setTimeout(() => { b.textContent = label; }, 1400);
+  }));
+}
+
+function emptyCodes() {
+  return `<div class="empty-state"><strong>Nothing found</strong><p>Try another word, or choose All.</p></div>`;
+}
+
 /* ── Command palette ─────────────────────────────────────────── */
 function paletteSource() {
   const lessonItems = lessons.map((l) => ({ kind: 'lesson', id: l.id, title: l.title, meta: `${l.track} · ${l.duration}` }));
   const questionItems = interviewQuestions.map((q) => ({ kind: 'interview', id: q.id, title: q.q, meta: `Interview · ${q.track}` }));
-  return [...lessonItems, ...questionItems];
+  const codeItems = [
+    ...tcodes.map((c) => ({ kind: 'code', tab: 'tcodes', id: c.id, title: `${c.code} · ${c.title}`, meta: `T-code · ${c.area}` })),
+    ...imgPaths.map((p) => ({ kind: 'code', tab: 'paths', id: p.id, title: p.title, meta: `IMG path · ${p.area}` }))
+  ];
+  return [...lessonItems, ...questionItems, ...codeItems];
 }
 function renderPalette(text = '') {
   const term = text.trim().toLowerCase();
@@ -342,7 +450,7 @@ function renderPalette(text = '') {
   paletteItems = (term ? all.filter((x) => `${x.title} ${x.meta}`.toLowerCase().includes(term)) : all).slice(0, 12);
   paletteIndex = 0;
   paletteResults.innerHTML = paletteItems.length
-    ? paletteItems.map((x, i) => `<button type="button" class="palette-item ${i === 0 ? 'is-active' : ''}" data-pi="${i}"><span class="palette-kind">${x.kind === 'lesson' ? 'LESSON' : 'Q&A'}</span><span class="palette-title">${esc(x.title)}</span><span class="palette-meta">${esc(x.meta)}</span></button>`).join('')
+    ? paletteItems.map((x, i) => `<button type="button" class="palette-item ${i === 0 ? 'is-active' : ''}" data-pi="${i}"><span class="palette-kind">${x.kind === 'lesson' ? 'LESSON' : x.kind === 'code' ? 'CODE' : 'Q&A'}</span><span class="palette-title">${esc(x.title)}</span><span class="palette-meta">${esc(x.meta)}</span></button>`).join('')
     : `<div class="palette-empty">No matches. Try “qualifying”, “type 4”, or “workflow”.</div>`;
   paletteResults.querySelectorAll('[data-pi]').forEach((b) => b.addEventListener('click', () => choosePalette(Number(b.dataset.pi))));
 }
@@ -350,7 +458,8 @@ function choosePalette(i) {
   const item = paletteItems[i];
   if (!item) return;
   closePalette();
-  if (item.kind === 'lesson') openLesson(item.id);
+  if (item.kind === 'code') openCodes(item.tab, item.id);
+  else if (item.kind === 'lesson') openLesson(item.id);
   else openInterview(item.id);
 }
 function movePalette(delta) {
@@ -374,6 +483,7 @@ function render() {
   updateProgress();
   updateBottomNav();
   if (view === 'interview') { renderInterview(); return; }
+  if (view === 'codes') { renderCodes(); return; }
   if (view === 'lesson') {
     const item = findLesson(lessons, state.activeLesson);
     if (item) { renderLesson(item); return; }
@@ -386,6 +496,7 @@ document.querySelector('.brand').addEventListener('click', (e) => { e.preventDef
 const mobileBrand = document.querySelector('.mobile-brand');
 if (mobileBrand) mobileBrand.addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); goHome(); });
 document.querySelector('#open-interview').addEventListener('click', () => openInterview());
+document.querySelector('#open-codes').addEventListener('click', () => openCodes());
 document.querySelector('#theme-toggle').addEventListener('click', toggleTheme);
 const mobileTheme = document.querySelector('#mobile-theme');
 if (mobileTheme) mobileTheme.addEventListener('click', toggleTheme);
