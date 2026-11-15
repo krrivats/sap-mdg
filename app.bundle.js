@@ -2156,7 +2156,7 @@ function block(b, i) {
       return `<aside class="note note-${esc(b.tone)}"><span class="note-icon" aria-hidden="true">${icon}</span><div><strong>${esc(b.t)}</strong><p>${esc(b.b)}</p></div></aside>`;
     }
     case 'video':
-      return `<section class="block video-block"><span class="video-icon" aria-hidden="true">▶</span><div><strong>${esc(b.t)}</strong><p>${esc(b.b)}</p><a class="button button-ghost" href="${esc(b.url)}" target="_blank" rel="noopener">Watch the video <span aria-hidden="true">→</span></a></div></section>`;
+      return `<section class="block video-block"><span class="video-icon" aria-hidden="true">▶</span><div><strong>${esc(b.t)}</strong><p>${esc(b.b)}</p><video class="video-player" controls playsinline preload="metadata" src="${esc(b.url)}" aria-label="${esc(b.t)}"></video></div></section>`;
     case 'sim':
       return `<section class="block sim-block"><h2>🎮 Try it yourself</h2><p class="sim-caption">${esc(b.caption ?? '')}</p><div class="sim" data-sim="${esc(b.name)}"><div class="sim-body"></div></div></section>`;
     case 'example':
@@ -2267,7 +2267,7 @@ function renderOverview() {
   </section>
   ${selectedTrack === 'all' && !query ? `<section class="continue-card"><div class="continue-art" aria-hidden="true"><span>MDG</span><i></i><i></i><i></i></div><div class="continue-copy"><p class="eyebrow">PICK UP WHERE YOU LEFT OFF</p><h2>${esc(current.title)}</h2><p>${esc(current.intro)}</p></div><button type="button" class="button button-dark" data-lesson="${esc(current.id)}">Open lesson <span aria-hidden="true">→</span></button></section>
   <section class="tomorrow-banner"><span class="tomorrow-icon" aria-hidden="true">✳</span><div><strong>Tomorrow in your SAP system</strong><p>Start with the system-orientation checklist. Confirm your system and training scope before making changes.</p></div><button type="button" class="text-button" data-lesson="tomorrow-checklist">Open checklist <span aria-hidden="true">→</span></button></section>
-  <section class="video-card"><div class="video-art" aria-hidden="true">▶</div><div><p class="eyebrow">NEW · 24-SECOND EXPLAINER</p><h2>UI modeling in 24 seconds</h2><p>See the data model become a screen: grouped, labeled, and guided.</p></div><a class="button button-dark" href="./assets/ui-modeling-explainer.mp4" target="_blank" rel="noopener">Watch <span aria-hidden="true">→</span></a></section>
+  <section class="video-card"><div class="video-art" aria-hidden="true">▶</div><div><p class="eyebrow">NEW · 24-SECOND EXPLAINER</p><h2>UI modeling in 24 seconds</h2><p>See the data model become a screen: grouped, labeled, and guided.</p><a class="button button-dark" href="./assets/ui-modeling-explainer.mp4" target="_blank" rel="noopener">Open full screen <span aria-hidden="true">→</span></a></div><video class="video-player" controls playsinline preload="metadata" src="./assets/ui-modeling-explainer.mp4" aria-label="UI modeling 24 second explainer"></video></section>
   ${quickRecallCard()}
   ${selectedTrack === 'all' && !query ? gamerCard() : ''}
   <section class="track-overview"><div class="section-heading"><div><p class="eyebrow">THE LEARNING PATH</p><h2>Build understanding, one layer at a time</h2></div><span>${lessons.length} lessons</span></div><div class="track-grid">${tracks.filter((t) => t.id !== 'all').map((t) => {
