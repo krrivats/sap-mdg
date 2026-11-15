@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f5ef">
+    <meta name="description" content="A beginner-friendly, hands-on learning guide and interview bank for SAP S/4HANA Master Data Governance: foundations, data modeling, UI modeling, process modeling, MDG-M, and MDG-F.">
+    <title>SAP MDG Learning Lab</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script defer src="./app.bundle.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to learning content</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Learning navigation">
+        <a class="brand" href="#home" aria-label="MDG Fieldnotes home">
+          <span class="brand-mark" aria-hidden="true">m</span>
+          <span><strong>MDG fieldnotes</strong><small>LEARNING LAB · 02</small></span>
+        </a>
+        <div class="side-label">YOUR LEARNING PATH</div>
+        <nav id="track-navigation" class="track-navigation" aria-label="Learning modules"></nav>
+        <button class="interview-link" id="open-interview" type="button"><span aria-hidden="true">🎤</span> Interview Q&amp;A <b id="interview-count"></b></button>
+        <div class="sidebar-bottom">
+          <div class="side-label">YOUR PROGRESS</div>
+          <div class="ring-wrap">
+            <svg class="progress-ring" viewBox="0 0 44 44" aria-hidden="true">
+              <circle class="ring-track" cx="22" cy="22" r="18"></circle>
+              <circle class="ring-fill" id="ring-fill" cx="22" cy="22" r="18"></circle>
+            </svg>
+            <div class="ring-text"><strong id="ring-percent">0%</strong><span id="sidebar-progress-label">0 of 0 lessons</span></div>
+          </div>
+          <p class="local-note"><span aria-hidden="true">●</span> Progress stays on this device</p>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <div class="breadcrumb"><span>LEARNING LAB</span><span aria-hidden="true">/</span><strong id="breadcrumb-current">Overview</strong></div>
+          <div class="top-actions">
+            <label class="search-box"><span aria-hidden="true">⌕</span><span class="visually-hidden">Search lessons</span><input id="lesson-search" type="search" placeholder="Search lessons…" autocomplete="off"><kbd>/</kbd></label>
+            <button class="icon-button" id="palette-open" type="button" aria-label="Open quick jump (Control K)" title="Quick jump (Ctrl K)">⌘K</button>
+            <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch theme" title="Switch light/dark theme">◐</button>
+          </div>
+        </header>
+        <main id="main-content" tabindex="-1">
+          <div id="app-content" aria-live="polite"></div>
+        </main>
+        <footer class="page-footer"><span>Built for learning, not memorizing menus.</span><span>S/4HANA MDG · ECC context · MDG-M + MDG-F</span></footer>
+      </div>
+    </div>
+
+    <div class="palette" id="palette" hidden>
+      <div class="palette-box" role="dialog" aria-modal="true" aria-label="Quick jump">
+        <div class="palette-input-wrap"><span aria-hidden="true">⌕</span><input id="palette-input" type="search" placeholder="Jump to a lesson or interview question…" autocomplete="off" aria-label="Quick jump search"><kbd>Esc</kbd></div>
+        <div class="palette-results" id="palette-results"></div>
+        <div class="palette-hint"><span>↑ ↓ to move</span><span>Enter to open</span><span>Esc to close</span></div>
+      </div>
+    </div>
+    <noscript><p class="noscript">This learning guide needs JavaScript enabled to save progress and navigate lessons.</p></noscript>
+  </body>
+</html>
