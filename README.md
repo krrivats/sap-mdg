@@ -2,6 +2,8 @@
 
 A beginner-friendly, local-first learning companion and interview bank for **SAP S/4HANA Master Data Governance (MDG)**, covering **MDG-M (Materials)** and **MDG-F (Financials)**.
 
+**Live site:** https://krrivats.github.io/sap-mdg/
+
 The goal: explain the *why* before the *how*, in simple words, with examples, diagrams, memory tricks, hands-on runbooks, and a full interview bank.
 
 ## Open it
