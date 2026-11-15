@@ -1253,6 +1253,101 @@ const interviewQuestions = [
 ];
 
 
+/* src/interview-simple.js */
+// A one-sentence answer for every interview question.
+const simpleById = {
+  'i-what-is-mdg': 'A controlled way to change important company data.',
+  'i-master-vs-transaction': 'Master data is reused. Transaction data is one event.',
+  'i-why-govern': 'Bad data spreads. MDG checks it before it spreads.',
+  'i-change-request': 'The envelope that carries a data change.',
+  'i-staging-active': 'Draft data is in staging. Approved data is live.',
+  'i-hub': 'One central system approves data for other systems.',
+  'i-co-deployment': 'MDG and the business work share one system.',
+  'i-ecc-s4': 'S/4HANA is newer. ECC is older. Both are SAP ERP.',
+  'i-replication': 'Sending approved data to another system.',
+  'i-data-model-def': 'The plan for the data: things, fields, and links.',
+
+  'i-three-blocks': 'Things, fields, and links.',
+  'i-entity-type': 'One business thing, like Material or Supplier.',
+  'i-four-types': '1 main, 2 pick list in, 3 pick list out, 4 child.',
+  'i-type1': 'The main object with its own key and tables.',
+  'i-type2': 'A pick list kept inside MDG.',
+  'i-type3': 'A pick list kept outside MDG.',
+  'i-type4': 'Child data with no key of its own.',
+  'i-why-type4-nokey': 'It borrows the parent key and adds its own key parts.',
+  'i-leading': 'It says which record owns the context.',
+  'i-qualifying': 'It adds more key fields to the child.',
+  'i-leading-vs-qualifying': 'Leading gives context. Qualifying gives the key.',
+  'i-referencing': 'It copies the other key in as a field.',
+  'i-cardinality': 'How many records can link to how many.',
+  'i-type4-rule': 'One leading link, one qualifying link, and no own key.',
+  'i-type1-qualifying': 'No. A type 1 can only lead or reference.',
+  'i-reuse': 'Live data sits in tables that already exist.',
+  'i-flex': 'MDG builds its own live tables.',
+  'i-reuse-vs-flex': 'Reuse uses old tables. Flex builds new tables.',
+  'i-active-area': 'Where approved data lives and is used.',
+  'i-attribute': 'One fact about a thing, like a name.',
+  'i-key-vs-normal': 'The key finds the record. The rest describes it.',
+  'i-data-element-domain': 'The element gives meaning. The domain gives the type.',
+  'i-check-table': 'A table that checks if a value is real.',
+  'i-value-vs-check': 'The value table suggests. The check table checks.',
+  'i-search-help': 'The F4 list that helps users pick a value.',
+  'i-search-help-where': 'On fields, hierarchy fields, and type 1, 2, or 3.',
+  'i-hierarchy': 'A parent–child tree for records.',
+  'i-enable-hierarchy': 'Set Hierarchies to something other than "No hierarchy".',
+  'i-hierarchy-attr': 'Extra data on the link, not on the record.',
+  'i-association': 'A path the user can follow between objects.',
+  'i-assoc-vs-rel': 'A relationship is structure. An association is a path.',
+  'i-entity-attr': 'A field that holds another object key.',
+  'i-derive-model': 'Find parent, child, and pick lists. Then add links.',
+  'i-spro-path': 'MDG → General Settings → Data Modeling → Edit Data Model.',
+  'i-z-model-steps': 'Model, objects, fields, links, check, activate, staging, check.',
+  'i-model-mistakes': 'Everything type 1, wrong counts, unused fields, no help, weak keys.',
+
+  'i-ui-modeling': 'Deciding what each role sees on the screen.',
+  'i-ui-vs-data': 'The model holds the data. The screen shows a view of it.',
+  'i-idr': 'The name plate: key fields and search.',
+  'i-oif': 'The page frame for one object.',
+  'i-uibb': 'A reusable block on the page, like a form section.',
+  'i-form-search-uibb': 'Form is for entry. Search is for finding.',
+  'i-test-ui': 'A real user finishes the task without help.',
+  'i-fiori-webdynpro': 'Two screen technologies. Check which one your system uses.',
+
+  'i-process-modeling': 'Who does what, in what order, and when.',
+  'i-cr-type': 'It picks the route for this kind of change.',
+  'i-business-activity': 'One step in the route.',
+  'i-workflow': 'The conveyor belt that moves the request.',
+  'i-agent': 'The rule that decides who gets the step.',
+  'i-brfplus': 'Rules without hard-coded code.',
+  'i-parallel': 'Two reviews at the same time.',
+  'i-unhappy-path': 'Test errors, rejects, send-backs, and missing people.',
+
+  'i-mdgm': 'The material part of MDG.',
+  'i-material-master': 'The record that describes an item.',
+  'i-org-data': 'Data that depends on plant or company.',
+  'i-material-flow': 'Ask, fill, check, review, approve, go live, send.',
+  'i-material-error': 'Read the message. Fix the field. Check again.',
+  'i-material-not-distributed': 'Check go-live, the send step, the connection, and the log.',
+  'i-plant': 'A place where the material is made, stored, or used.',
+
+  'i-mdgf': 'The financial part of MDG.',
+  'i-mdgf-mode': 'Flex mode with model 0G.',
+  'i-company-code': 'The legal books for one company.',
+  'i-finance-flow': 'Confirm, fill, check, approve, go live, send.',
+  'i-finance-scope': 'The safe object differs by system. Ask first.',
+  'i-finance-evidence': 'Request ID, status, checks, approval, go-live, send.',
+
+  'i-unfamiliar-system': 'Check system, scope, client, role. Then try one safe example.',
+  'i-skip-approval': 'Say no. Use the exception path if it is a real emergency.',
+  'i-explain-mdg': 'One controlled way to ask, check, approve, and share data.',
+  'i-duplicate-material': 'Do not delete. Find usage and owner. Use the merge process.',
+  'i-test-model': 'Make one real record. Check keys, links, checks, and go-live.',
+  'i-stuck-cr': 'Check the step, the owner, the permission, and the escalation.',
+  'i-why-mdg': 'It joins business, data quality, and system setup.',
+  'i-techno-functional': 'You can explain the business and fix the system.'
+};
+
+
 /* src/diagrams.js */
 // Inline SVG diagrams. No external files, no network, works on GitHub Pages.
 const C = {
@@ -1815,6 +1910,7 @@ function iqCard(q) {
   return `<article class="iq-card ${mastered ? 'is-mastered' : ''}" data-iq="${esc(q.id)}" id="iq-${esc(q.id)}">
     <div class="iq-top"><span class="iq-level iq-${esc(q.level.toLowerCase())}">${esc(q.level)}</span><span class="iq-track">${esc(q.track)}</span><button type="button" class="master-btn ${mastered ? 'is-on' : ''}" data-master="${esc(q.id)}" aria-pressed="${mastered}">${mastered ? '✓ Mastered' : 'Mark mastered'}</button></div>
     <h3 class="iq-q">${esc(q.q)}</h3>
+    <p class="iq-simple"><span>IN ONE LINE</span>${esc(simpleById[q.id] ?? q.a)}</p>
     <details class="iq-answer" ${iqShowAll ? 'open' : ''}><summary>Show answer</summary>
       <p class="iq-a">${esc(q.a)}</p>
       <p class="iq-eg"><b>Example</b> ${esc(q.example)}</p>

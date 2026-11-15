@@ -403,6 +403,10 @@ td:first-child { color: var(--ink); font-weight: 500; }
 .master-btn:hover { border-color: var(--green); color: var(--green); }
 .master-btn.is-on { background: var(--green-soft); border-color: color-mix(in srgb, var(--green) 34%, transparent); color: var(--green); }
 .iq-q { font-family: var(--font-display); font-weight: 500; font-size: 1.02rem; margin: .1rem 0 .45rem; letter-spacing: -.01em; }
+.iq-simple { display: flex; gap: .5rem; align-items: baseline; margin: 0 0 .5rem; padding: .35rem .6rem; background: var(--panel-2); border-left: 3px solid var(--accent); border-radius: 6px; font-size: .85rem; color: var(--ink); }
+.iq-simple span { font-family: var(--font-mono); font-size: .52rem; letter-spacing: .12em; color: var(--accent); font-weight: 700; white-space: nowrap; }
+.iq-simple { display: flex; gap: .5rem; align-items: baseline; margin: 0 0 .5rem; font-size: .84rem; color: var(--ink); background: var(--panel-2); border-left: 3px solid var(--accent); border-radius: 6px; padding: .35rem .6rem; }
+.iq-simple span { font-family: var(--font-mono); font-size: .52rem; letter-spacing: .12em; color: var(--accent); font-weight: 700; white-space: nowrap; }
 .iq-answer summary { cursor: pointer; font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); list-style: none; }
 .iq-answer summary::-webkit-details-marker { display: none; }
 .iq-answer summary::after { content: " ↓"; }

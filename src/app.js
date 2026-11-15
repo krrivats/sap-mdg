@@ -1,5 +1,6 @@
 import { lessons, tracks } from './content.js';
 import { interviewQuestions, interviewTracks } from './interview.js';
+import { simpleById } from './interview-simple.js';
 import { findLesson, searchLessons, summarizeProgress } from './learning.js';
 import { renderDiagram } from './diagrams.js';
 
@@ -320,6 +321,7 @@ function iqCard(q) {
   return `<article class="iq-card ${mastered ? 'is-mastered' : ''}" data-iq="${esc(q.id)}" id="iq-${esc(q.id)}">
     <div class="iq-top"><span class="iq-level iq-${esc(q.level.toLowerCase())}">${esc(q.level)}</span><span class="iq-track">${esc(q.track)}</span><button type="button" class="master-btn ${mastered ? 'is-on' : ''}" data-master="${esc(q.id)}" aria-pressed="${mastered}">${mastered ? '✓ Mastered' : 'Mark mastered'}</button></div>
     <h3 class="iq-q">${esc(q.q)}</h3>
+    <p class="iq-simple"><span>IN ONE LINE</span>${esc(simpleById[q.id] ?? q.a)}</p>
     <details class="iq-answer" ${iqShowAll ? 'open' : ''}><summary>Show answer</summary>
       <p class="iq-a">${esc(q.a)}</p>
       <p class="iq-eg"><b>Example</b> ${esc(q.example)}</p>
