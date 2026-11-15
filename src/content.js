@@ -102,6 +102,7 @@ export const lessons = [
       { k: 'p', t: 'In one line', b: 'Hub is a head office. Co-deployment is one office doing both jobs.' },
       { k: 'example', t: 'A simple example', b: 'A group has one MDG hub. Three factories send requests to it. The hub approves the data and sends it back to each factory system.' },
       { k: 'diagram', name: 'mdgLandscape', caption: 'Hub versus co-deployment.' },
+      { k: 'sim', name: 'deploySim', caption: 'Switch between hub and co-deployment. Press Send to see data leave the hub.' },
       { k: 'table', t: 'The difference', head: ['Question', 'Hub', 'Co-deployment'], rows: [
         ['Where is the request?', 'In the central MDG system', 'In the same system as the business work'],
         ['Where does approved data go?', 'To one or more connected systems', 'Usually used in the same system'],
@@ -161,6 +162,7 @@ export const lessons = [
       { k: 'p', t: 'In one line', b: 'Reuse means “use the old house”. Flex means “build a new house”.' },
       { k: 'example', t: 'A simple example', b: 'Material data already lives in tables MARA and MARC. Reuse mode uses those tables. A custom object has no such table. Flex mode lets MDG create one.' },
       { k: 'diagram', name: 'reuseFlex', caption: 'Reuse uses existing tables. Flex creates tables from the model.' },
+      { k: 'sim', name: 'modeSim', caption: 'Switch between reuse and flex. See where the live data goes, and when each one fits.' },
       { k: 'table', t: 'Side by side', head: ['', 'Reuse mode', 'Flex mode'], rows: [
         ['Live data is in', 'Existing tables, like MARA and MARC', 'New tables built by MDG'],
         ['The table shape comes from', 'The old application', 'Your data model'],

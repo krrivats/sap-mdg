@@ -26,6 +26,68 @@ const TYPE_WHY = {
 };
 
 export const sims = {
+  modeSim: {
+    init: () => ({ mode: 'reuse' }),
+    body(s) {
+      const reuse = s.mode === 'reuse';
+      const info = reuse
+        ? { store: '🗄️ Existing tables', detail: 'MARA · MARC · KNA1', msg: 'Live data goes into tables SAP already has.', best: 'Standard S/4HANA areas, and custom objects that must use the existing tables.', watch: 'You may need a reuse class to read those tables.' }
+        : { store: '🛠️ MDG-built tables', detail: 'generated from your model', msg: 'MDG builds its own live tables from your data model.', best: 'MDG Financials (model 0G), and new custom objects with no old table.', watch: 'Your model sets the table shape, so review the model carefully.' };
+      return `<div class="sim-boxes">
+          <div class="sim-box"><small>YOUR MODEL</small><b>🧱 Entity types</b><span>things + fields</span></div>
+          <div class="sim-link">━━▶ ${reuse ? 'reuse' : 'build'}</div>
+          <div class="sim-box sim-box-wide ${reuse ? '' : 'sim-pop'}"><small>LIVE DATA IS KEPT IN</small><b>${info.store}</b><span>${escSim(info.detail)}</span></div>
+        </div>
+        <div class="sim-msg">${escSim(info.msg)}</div>
+        <div class="sim-two">
+          <div class="sim-card"><small>BEST FOR</small><p>${escSim(info.best)}</p></div>
+          <div class="sim-card"><small>WATCH OUT</small><p>${escSim(info.watch)}</p></div>
+        </div>
+        <div class="sim-btns">
+          <button class="sim-btn ${reuse ? 'is-on' : ''}" data-act="mode" data-m="reuse">🗄️ Reuse mode</button>
+          <button class="sim-btn ${reuse ? '' : 'is-on'}" data-act="mode" data-m="flex">🛠️ Flex mode</button>
+        </div>`;
+    },
+    act(s, a, d) {
+      if (a === 'mode') s.mode = d.m;
+    }
+  },
+
+  deploySim: {
+    init: () => ({ mode: 'hub', sent: 0 }),
+    body(s) {
+      const hub = s.mode === 'hub';
+      const visual = hub
+        ? `<div class="sim-hub">
+             <div class="sim-box"><small>CENTRAL</small><b>🧠 MDG hub</b><span>approves data</span></div>
+             <div class="sim-spokes">
+               <span class="sim-spoke sim-packet" style="animation-delay:0s">📤</span>
+               <span class="sim-spoke sim-packet" style="animation-delay:.4s">📤</span>
+               <span class="sim-spoke sim-packet" style="animation-delay:.8s">📤</span>
+             </div>
+             <div class="sim-targets">
+               <div class="sim-box"><b>🏭 ECC</b></div>
+               <div class="sim-box"><b>🏢 S/4HANA</b></div>
+               <div class="sim-box"><b>☁️ Cloud app</b></div>
+             </div>
+           </div>`
+        : `<div class="sim-box sim-box-wide"><small>ONE SYSTEM</small><b>🧩 MDG + daily business work</b>
+             <div class="sim-two sim-two-tight"><span>✅ approve</span><span>🛒 buy and sell</span></div></div>`;
+      return `${visual}
+        <div class="sim-msg ${hub ? '' : 'is-good'}">${hub ? 'One central system approves data. Other systems receive the approved copy.' : 'Governance and daily work share one system. Simpler, but one system carries more load.'}</div>
+        <div class="sim-btns">
+          <button class="sim-btn ${hub ? 'is-on' : ''}" data-act="mode" data-m="hub">🧠 Hub</button>
+          <button class="sim-btn ${hub ? '' : 'is-on'}" data-act="mode" data-m="co">🧩 Co-deployment</button>
+          <button class="sim-btn" data-act="send" ${hub ? '' : 'disabled'}>📤 Send approved data</button>
+        </div>
+        <p class="sim-count">${hub ? `Updates sent from the hub: ${s.sent}` : 'Switch to hub to see data sent to other systems.'}</p>`;
+    },
+    act(s, a, d) {
+      if (a === 'mode') s.mode = d.m;
+      if (a === 'send' && s.mode === 'hub') s.sent += 1;
+    }
+  },
+
   crSim: {
     init: () => ({ i: 0, rejected: false, note: '' }),
     body(s) {

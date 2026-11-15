@@ -51,14 +51,14 @@ function slug(text) {
 }
 function applyTheme() {
   document.documentElement.dataset.theme = state.theme;
-  const icon = state.theme === 'dark' ? '☀' : '◐';
+  const icon = { light: '◐', dark: '☀', neon: '⚡' }[state.theme] ?? '◐';
   document.querySelector('#theme-toggle').textContent = icon;
   const mobile = document.querySelector('#mobile-theme');
   if (mobile) mobile.textContent = icon;
-  document.querySelector('meta[name="theme-color"]').setAttribute('content', state.theme === 'dark' ? '#0f1014' : '#f6f5ef');
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', { light: '#f6f5ef', dark: '#0f1014', neon: '#07070d' }[state.theme] ?? '#f6f5ef');
 }
 function toggleTheme() {
-  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  state.theme = { light: 'dark', dark: 'neon', neon: 'light' }[state.theme] ?? 'light';
   saveState(); applyTheme();
 }
 function updateProgress() {
@@ -162,6 +162,42 @@ function quickRecallCard() {
   </section>`;
 }
 
+function gamerCard() {
+  const done = state.completed.length;
+  const mastered = state.mastered.length;
+  const xp = done * 50 + mastered * 10;
+  const levels = [['Apprentice', '🥚'], ['Analyst', '🐣'], ['Consultant', '🛠️'], ['Architect', '🏗️'], ['Master', '👑']];
+  const lvl = Math.min(levels.length, Math.floor(xp / 300) + 1);
+  const into = xp % 300;
+  const pct = lvl === levels.length ? 100 : Math.round((into / 300) * 100);
+  const trackDone = (t) => {
+    const ls = lessons.filter((l) => l.track === t);
+    return ls.length > 0 && ls.every((l) => state.completed.includes(l.id));
+  };
+  const badges = [
+    { e: '🚀', n: 'First step', ok: done >= 1 },
+    { e: '🧭', n: 'Foundations done', ok: trackDone('Foundations') },
+    { e: '🧱', n: 'Data modeler', ok: trackDone('Data modeling') },
+    { e: '🎨', n: 'Screen designer', ok: trackDone('UI modeling') },
+    { e: '🔁', n: 'Process pro', ok: trackDone('Process modeling') },
+    { e: '🎤', n: '10 answers mastered', ok: mastered >= 10 },
+    { e: '🏆', n: '50 answers mastered', ok: mastered >= 50 },
+    { e: '🌟', n: 'Every lesson', ok: done === lessons.length }
+  ];
+  const earned = badges.filter((b) => b.ok).length;
+  const next = lvl === levels.length ? 'Max level reached 👑' : `${300 - into} XP to ${levels[lvl][0]}`;
+  return `<section class="gamer" aria-label="Your progress">
+    <div class="gamer-top">
+      <div class="gamer-level"><span class="gamer-emoji" aria-hidden="true">${levels[lvl - 1][1]}</span><div><small>LEVEL ${lvl}</small><strong>${levels[lvl - 1][0]}</strong></div></div>
+      <div class="gamer-stats"><span><b>${xp}</b> XP</span><span><b>${earned}/${badges.length}</b> badges</span></div>
+    </div>
+    <div class="gamer-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></div>
+    <small class="gamer-next">${escapeHTML(next)}</small>
+    <div class="badges">${badges.map((b) => `<span class="badge-chip ${b.ok ? 'is-earned' : ''}" title="${esc(b.n)}">${b.e} ${esc(b.n)}</span>`).join('')}</div>
+  </section>`;
+}
+function escapeHTML(text) { return esc(text); }
+
 function renderOverview() {
   const p = summarizeProgress(lessons, state.completed);
   const filtered = searchLessons(lessons, query);
@@ -178,6 +214,7 @@ function renderOverview() {
   ${selectedTrack === 'all' && !query ? `<section class="continue-card"><div class="continue-art" aria-hidden="true"><span>MDG</span><i></i><i></i><i></i></div><div class="continue-copy"><p class="eyebrow">PICK UP WHERE YOU LEFT OFF</p><h2>${esc(current.title)}</h2><p>${esc(current.intro)}</p></div><button type="button" class="button button-dark" data-lesson="${esc(current.id)}">Open lesson <span aria-hidden="true">→</span></button></section>
   <section class="tomorrow-banner"><span class="tomorrow-icon" aria-hidden="true">✳</span><div><strong>Tomorrow in your SAP system</strong><p>Start with the system-orientation checklist. Confirm your system and training scope before making changes.</p></div><button type="button" class="text-button" data-lesson="tomorrow-checklist">Open checklist <span aria-hidden="true">→</span></button></section>
   ${quickRecallCard()}
+  ${selectedTrack === 'all' && !query ? gamerCard() : ''}
   <section class="track-overview"><div class="section-heading"><div><p class="eyebrow">THE LEARNING PATH</p><h2>Build understanding, one layer at a time</h2></div><span>${lessons.length} lessons</span></div><div class="track-grid">${tracks.filter((t) => t.id !== 'all').map((t) => {
     const count = lessons.filter((l) => l.track === t.id).length;
     return `<button type="button" class="track-card" data-track="${esc(t.id)}"><span class="track-card-icon">${esc(t.icon)}</span><span class="track-card-title">${esc(t.label)}</span><span class="track-card-description">${esc(t.description)}</span><span class="track-card-count">${count} ${count === 1 ? 'lesson' : 'lessons'} <b aria-hidden="true">↗</b></span></button>`;

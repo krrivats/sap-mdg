@@ -128,6 +128,7 @@ const lessons = [
       { k: 'p', t: 'In one line', b: 'Hub is a head office. Co-deployment is one office doing both jobs.' },
       { k: 'example', t: 'A simple example', b: 'A group has one MDG hub. Three factories send requests to it. The hub approves the data and sends it back to each factory system.' },
       { k: 'diagram', name: 'mdgLandscape', caption: 'Hub versus co-deployment.' },
+      { k: 'sim', name: 'deploySim', caption: 'Switch between hub and co-deployment. Press Send to see data leave the hub.' },
       { k: 'table', t: 'The difference', head: ['Question', 'Hub', 'Co-deployment'], rows: [
         ['Where is the request?', 'In the central MDG system', 'In the same system as the business work'],
         ['Where does approved data go?', 'To one or more connected systems', 'Usually used in the same system'],
@@ -187,6 +188,7 @@ const lessons = [
       { k: 'p', t: 'In one line', b: 'Reuse means “use the old house”. Flex means “build a new house”.' },
       { k: 'example', t: 'A simple example', b: 'Material data already lives in tables MARA and MARC. Reuse mode uses those tables. A custom object has no such table. Flex mode lets MDG create one.' },
       { k: 'diagram', name: 'reuseFlex', caption: 'Reuse uses existing tables. Flex creates tables from the model.' },
+      { k: 'sim', name: 'modeSim', caption: 'Switch between reuse and flex. See where the live data goes, and when each one fits.' },
       { k: 'table', t: 'Side by side', head: ['', 'Reuse mode', 'Flex mode'], rows: [
         ['Live data is in', 'Existing tables, like MARA and MARC', 'New tables built by MDG'],
         ['The table shape comes from', 'The old application', 'Your data model'],
@@ -1591,6 +1593,68 @@ const TYPE_WHY = {
 };
 
 const sims = {
+  modeSim: {
+    init: () => ({ mode: 'reuse' }),
+    body(s) {
+      const reuse = s.mode === 'reuse';
+      const info = reuse
+        ? { store: '🗄️ Existing tables', detail: 'MARA · MARC · KNA1', msg: 'Live data goes into tables SAP already has.', best: 'Standard S/4HANA areas, and custom objects that must use the existing tables.', watch: 'You may need a reuse class to read those tables.' }
+        : { store: '🛠️ MDG-built tables', detail: 'generated from your model', msg: 'MDG builds its own live tables from your data model.', best: 'MDG Financials (model 0G), and new custom objects with no old table.', watch: 'Your model sets the table shape, so review the model carefully.' };
+      return `<div class="sim-boxes">
+          <div class="sim-box"><small>YOUR MODEL</small><b>🧱 Entity types</b><span>things + fields</span></div>
+          <div class="sim-link">━━▶ ${reuse ? 'reuse' : 'build'}</div>
+          <div class="sim-box sim-box-wide ${reuse ? '' : 'sim-pop'}"><small>LIVE DATA IS KEPT IN</small><b>${info.store}</b><span>${escSim(info.detail)}</span></div>
+        </div>
+        <div class="sim-msg">${escSim(info.msg)}</div>
+        <div class="sim-two">
+          <div class="sim-card"><small>BEST FOR</small><p>${escSim(info.best)}</p></div>
+          <div class="sim-card"><small>WATCH OUT</small><p>${escSim(info.watch)}</p></div>
+        </div>
+        <div class="sim-btns">
+          <button class="sim-btn ${reuse ? 'is-on' : ''}" data-act="mode" data-m="reuse">🗄️ Reuse mode</button>
+          <button class="sim-btn ${reuse ? '' : 'is-on'}" data-act="mode" data-m="flex">🛠️ Flex mode</button>
+        </div>`;
+    },
+    act(s, a, d) {
+      if (a === 'mode') s.mode = d.m;
+    }
+  },
+
+  deploySim: {
+    init: () => ({ mode: 'hub', sent: 0 }),
+    body(s) {
+      const hub = s.mode === 'hub';
+      const visual = hub
+        ? `<div class="sim-hub">
+             <div class="sim-box"><small>CENTRAL</small><b>🧠 MDG hub</b><span>approves data</span></div>
+             <div class="sim-spokes">
+               <span class="sim-spoke sim-packet" style="animation-delay:0s">📤</span>
+               <span class="sim-spoke sim-packet" style="animation-delay:.4s">📤</span>
+               <span class="sim-spoke sim-packet" style="animation-delay:.8s">📤</span>
+             </div>
+             <div class="sim-targets">
+               <div class="sim-box"><b>🏭 ECC</b></div>
+               <div class="sim-box"><b>🏢 S/4HANA</b></div>
+               <div class="sim-box"><b>☁️ Cloud app</b></div>
+             </div>
+           </div>`
+        : `<div class="sim-box sim-box-wide"><small>ONE SYSTEM</small><b>🧩 MDG + daily business work</b>
+             <div class="sim-two sim-two-tight"><span>✅ approve</span><span>🛒 buy and sell</span></div></div>`;
+      return `${visual}
+        <div class="sim-msg ${hub ? '' : 'is-good'}">${hub ? 'One central system approves data. Other systems receive the approved copy.' : 'Governance and daily work share one system. Simpler, but one system carries more load.'}</div>
+        <div class="sim-btns">
+          <button class="sim-btn ${hub ? 'is-on' : ''}" data-act="mode" data-m="hub">🧠 Hub</button>
+          <button class="sim-btn ${hub ? '' : 'is-on'}" data-act="mode" data-m="co">🧩 Co-deployment</button>
+          <button class="sim-btn" data-act="send" ${hub ? '' : 'disabled'}>📤 Send approved data</button>
+        </div>
+        <p class="sim-count">${hub ? `Updates sent from the hub: ${s.sent}` : 'Switch to hub to see data sent to other systems.'}</p>`;
+    },
+    act(s, a, d) {
+      if (a === 'mode') s.mode = d.m;
+      if (a === 'send' && s.mode === 'hub') s.sent += 1;
+    }
+  },
+
   crSim: {
     init: () => ({ i: 0, rejected: false, note: '' }),
     body(s) {
@@ -2038,14 +2102,14 @@ function slug(text) {
 }
 function applyTheme() {
   document.documentElement.dataset.theme = state.theme;
-  const icon = state.theme === 'dark' ? '☀' : '◐';
+  const icon = { light: '◐', dark: '☀', neon: '⚡' }[state.theme] ?? '◐';
   document.querySelector('#theme-toggle').textContent = icon;
   const mobile = document.querySelector('#mobile-theme');
   if (mobile) mobile.textContent = icon;
-  document.querySelector('meta[name="theme-color"]').setAttribute('content', state.theme === 'dark' ? '#0f1014' : '#f6f5ef');
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', { light: '#f6f5ef', dark: '#0f1014', neon: '#07070d' }[state.theme] ?? '#f6f5ef');
 }
 function toggleTheme() {
-  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  state.theme = { light: 'dark', dark: 'neon', neon: 'light' }[state.theme] ?? 'light';
   saveState(); applyTheme();
 }
 function updateProgress() {
@@ -2149,6 +2213,42 @@ function quickRecallCard() {
   </section>`;
 }
 
+function gamerCard() {
+  const done = state.completed.length;
+  const mastered = state.mastered.length;
+  const xp = done * 50 + mastered * 10;
+  const levels = [['Apprentice', '🥚'], ['Analyst', '🐣'], ['Consultant', '🛠️'], ['Architect', '🏗️'], ['Master', '👑']];
+  const lvl = Math.min(levels.length, Math.floor(xp / 300) + 1);
+  const into = xp % 300;
+  const pct = lvl === levels.length ? 100 : Math.round((into / 300) * 100);
+  const trackDone = (t) => {
+    const ls = lessons.filter((l) => l.track === t);
+    return ls.length > 0 && ls.every((l) => state.completed.includes(l.id));
+  };
+  const badges = [
+    { e: '🚀', n: 'First step', ok: done >= 1 },
+    { e: '🧭', n: 'Foundations done', ok: trackDone('Foundations') },
+    { e: '🧱', n: 'Data modeler', ok: trackDone('Data modeling') },
+    { e: '🎨', n: 'Screen designer', ok: trackDone('UI modeling') },
+    { e: '🔁', n: 'Process pro', ok: trackDone('Process modeling') },
+    { e: '🎤', n: '10 answers mastered', ok: mastered >= 10 },
+    { e: '🏆', n: '50 answers mastered', ok: mastered >= 50 },
+    { e: '🌟', n: 'Every lesson', ok: done === lessons.length }
+  ];
+  const earned = badges.filter((b) => b.ok).length;
+  const next = lvl === levels.length ? 'Max level reached 👑' : `${300 - into} XP to ${levels[lvl][0]}`;
+  return `<section class="gamer" aria-label="Your progress">
+    <div class="gamer-top">
+      <div class="gamer-level"><span class="gamer-emoji" aria-hidden="true">${levels[lvl - 1][1]}</span><div><small>LEVEL ${lvl}</small><strong>${levels[lvl - 1][0]}</strong></div></div>
+      <div class="gamer-stats"><span><b>${xp}</b> XP</span><span><b>${earned}/${badges.length}</b> badges</span></div>
+    </div>
+    <div class="gamer-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></div>
+    <small class="gamer-next">${escapeHTML(next)}</small>
+    <div class="badges">${badges.map((b) => `<span class="badge-chip ${b.ok ? 'is-earned' : ''}" title="${esc(b.n)}">${b.e} ${esc(b.n)}</span>`).join('')}</div>
+  </section>`;
+}
+function escapeHTML(text) { return esc(text); }
+
 function renderOverview() {
   const p = summarizeProgress(lessons, state.completed);
   const filtered = searchLessons(lessons, query);
@@ -2165,6 +2265,7 @@ function renderOverview() {
   ${selectedTrack === 'all' && !query ? `<section class="continue-card"><div class="continue-art" aria-hidden="true"><span>MDG</span><i></i><i></i><i></i></div><div class="continue-copy"><p class="eyebrow">PICK UP WHERE YOU LEFT OFF</p><h2>${esc(current.title)}</h2><p>${esc(current.intro)}</p></div><button type="button" class="button button-dark" data-lesson="${esc(current.id)}">Open lesson <span aria-hidden="true">→</span></button></section>
   <section class="tomorrow-banner"><span class="tomorrow-icon" aria-hidden="true">✳</span><div><strong>Tomorrow in your SAP system</strong><p>Start with the system-orientation checklist. Confirm your system and training scope before making changes.</p></div><button type="button" class="text-button" data-lesson="tomorrow-checklist">Open checklist <span aria-hidden="true">→</span></button></section>
   ${quickRecallCard()}
+  ${selectedTrack === 'all' && !query ? gamerCard() : ''}
   <section class="track-overview"><div class="section-heading"><div><p class="eyebrow">THE LEARNING PATH</p><h2>Build understanding, one layer at a time</h2></div><span>${lessons.length} lessons</span></div><div class="track-grid">${tracks.filter((t) => t.id !== 'all').map((t) => {
     const count = lessons.filter((l) => l.track === t.id).length;
     return `<button type="button" class="track-card" data-track="${esc(t.id)}"><span class="track-card-icon">${esc(t.icon)}</span><span class="track-card-title">${esc(t.label)}</span><span class="track-card-description">${esc(t.description)}</span><span class="track-card-count">${count} ${count === 1 ? 'lesson' : 'lessons'} <b aria-hidden="true">↗</b></span></button>`;
