@@ -290,6 +290,11 @@ td:first-child { color: var(--ink); font-weight: 500; }
 .note-exam { background: var(--violet-soft); border-color: color-mix(in srgb, var(--violet) 28%, transparent); }
 .note-exam strong { color: var(--violet); }
 
+.example { display: flex; gap: .7rem; background: var(--green-soft); border: 1px solid color-mix(in srgb, var(--green) 26%, transparent); border-radius: var(--radius); padding: .85rem 1rem; }
+.example-icon { font-size: 1rem; line-height: 1.3; flex-shrink: 0; }
+.example strong { display: block; margin-bottom: .15rem; font-size: .86rem; color: var(--green); }
+.example p { margin: 0; font-size: .88rem; }
+
 .diagram { margin: 0; background: #fbfaf7; border: 1px solid var(--line); border-radius: var(--radius); padding: .9rem 1rem .7rem; box-shadow: var(--shadow-sm); }
 .diagram-svg { width: 100%; height: auto; display: block; }
 .diagram figcaption { margin-top: .55rem; font-size: .74rem; color: #6d6e76; font-family: var(--font-mono); text-align: center; }

@@ -96,6 +96,8 @@ function block(b, i) {
       const icon = { why: '💡', tip: '🧠', warn: '⚠️', exam: '🎯' }[b.tone] || '📌';
       return `<aside class="note note-${esc(b.tone)}"><span class="note-icon" aria-hidden="true">${icon}</span><div><strong>${esc(b.t)}</strong><p>${esc(b.b)}</p></div></aside>`;
     }
+    case 'example':
+      return `<aside class="example" id="${id}"><span class="example-icon" aria-hidden="true">🌰</span><div><strong>${esc(b.t || 'Example')}</strong><p>${esc(b.b)}</p></div></aside>`;
     case 'diagram':
       return `<figure class="diagram" id="${id}"><div class="diagram-scroll">${renderDiagram(b.name)}</div><figcaption>${esc(b.caption)}</figcaption></figure>`;
     case 'compare':
@@ -199,7 +201,7 @@ function renderLesson(item) {
   breadcrumb.textContent = item.title;
   const index = lessons.findIndex((l) => l.id === item.id);
   const done = state.completed.includes(item.id);
-  const toc = item.sections.filter((b) => b.t && b.k !== 'note' && b.k !== 'mnemonic').map((b) => ({ id: `sec-${slug(b.t)}`, t: b.t }));
+  const toc = item.sections.filter((b) => b.t && !['note', 'mnemonic', 'example'].includes(b.k)).map((b) => ({ id: `sec-${slug(b.t)}`, t: b.t }));
   const mobileToc = toc.length ? `<details class="mobile-toc"><summary>📑 In this lesson</summary><div class="mobile-toc-links"><a href="#practice">Hands-on</a>${toc.map((x) => `<a href="#${x.id}">${esc(x.t)}</a>`).join('')}</div></details>` : '';
   appContent.innerHTML = `<article class="lesson-page">
     <button class="back-link" type="button" id="back-to-module"><span aria-hidden="true">←</span> Back to ${esc(item.track)}</button>
