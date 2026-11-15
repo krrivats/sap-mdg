@@ -2,6 +2,7 @@
 // ES modules are blocked by browsers on file:// URLs, so we concatenate the
 // source modules into one IIFE that loads with a normal <script> tag.
 import { readFileSync, writeFileSync } from 'node:fs';
+import vm from 'node:vm';
 
 const files = [
   'src/learning.js',
@@ -9,6 +10,7 @@ const files = [
   'src/interview.js',
   'src/interview-simple.js',
   'src/codes.js',
+  'src/simulators.js',
   'src/diagrams.js',
   'src/app.js'
 ];
@@ -22,5 +24,6 @@ const strip = (code) =>
 
 const body = files.map((file) => `/* ${file} */\n${strip(readFileSync(file, 'utf8'))}`).join('\n\n');
 const out = `/* SAP MDG Learning Lab — generated bundle. Edit the files in src/ then run: npm run build */\n(() => {\n'use strict';\n${body}\n})();\n`;
+new vm.Script(out, { filename: 'app.bundle.js' });
 writeFileSync('app.bundle.js', out, 'utf8');
 console.log(`Wrote app.bundle.js (${out.length.toLocaleString()} chars)`);

@@ -71,6 +71,7 @@ export const lessons = [
       { k: 'p', t: 'In one line', b: 'A request has six moments: ask, fill, check, review, decide, and go live.' },
       { k: 'example', t: 'A simple example', b: 'Priya asks for a new material. She fills the details. The system checks for missing fields. A data steward reviews it. A manager approves it. Then the material goes live.' },
       { k: 'diagram', name: 'crFlow', caption: 'The six moments of a change request.' },
+      { k: 'sim', name: 'crSim', caption: 'Press Next to move the request. Try Reject at the Decide step, then fix it and send it again.' },
       { k: 'ol', t: 'The six moments', items: [
         'Ask: choose a request type and say why.',
         'Fill: type the new data into the draft area.',
@@ -188,6 +189,7 @@ export const lessons = [
       { k: 'p', t: 'In one line', b: 'Type 1 is the main thing. Type 2 and 3 are pick lists. Type 4 is a child that cannot live alone.' },
       { k: 'example', t: 'A simple example', b: 'Material is type 1. It has its own number. Material–Plant is type 4. It only makes sense with a material. Plant is type 3. It is a pick list that already exists outside MDG.' },
       { k: 'diagram', name: 'types', caption: 'The four types at a glance.' },
+      { k: 'sim', name: 'typeSim', caption: 'Pick the right type for six real objects. Get a score at the end.' },
       { k: 'table', t: 'The four types', head: ['Type', 'What it is for', 'Own key?', 'Stored where?', 'Links it can start'], rows: [
         ['1', 'Main objects. More than one is allowed in a model.', 'Yes', 'New tables', 'Leading and referencing only. No qualifying.'],
         ['2', 'Pick lists kept inside MDG. No extra fields.', 'Yes', 'New tables', 'Leading'],
@@ -256,6 +258,7 @@ export const lessons = [
       { k: 'p', t: 'In one line', b: 'Leading gives the context. Qualifying adds key fields. Referencing copies a key in as a field.' },
       { k: 'example', t: 'A simple example', b: 'Material → Material–Plant is leading. It says “this plant data belongs to this material”. Plant → Material–Plant is qualifying. It adds plant to the key. A company code field is referencing. It copies the company code key in.' },
       { k: 'diagram', name: 'relationships', caption: 'The three link types in one picture.' },
+      { k: 'sim', name: 'linkSim', caption: 'Turn the links on and watch the Material–Plant key build itself.' },
       { k: 'table', t: 'The three link types', head: ['Type', 'What it does', 'Direction', 'Example'], rows: [
         ['Leading', 'Says which record owns the context. A type 1 can lead a type 1 or a type 4. A type 4 must have a leading type 1.', 'Type 1 → type 1 or 4', 'Material → Material–Plant'],
         ['Qualifying', 'Adds more key fields to the child. Type 2 and 3 can add keys to type 1 and 4. A type 4 key must include at least one type 1, 2, or 3.', 'Type 2/3 → type 1/4', 'Plant → Material–Plant'],
@@ -285,6 +288,7 @@ export const lessons = [
       { k: 'p', t: 'In one line', b: 'Read it from the left: “one material has many plant records.”' },
       { k: 'example', t: 'A simple example', b: 'One material can have plant data for Delhi, Mumbai, and Pune. That is 1:N. Each plant record still belongs to one material.' },
       { k: 'diagram', name: 'cardinality', caption: 'Cardinality and the type-4 rule.' },
+      { k: 'sim', name: 'cardSim', caption: 'Choose 1:1 or 1:N, then change how many plant records one material has.' },
       { k: 'table', t: 'The four options', head: ['Cardinality', 'Meaning', 'Example'], rows: [
         ['1:1', 'One on each side', 'A record and its single header'],
         ['1:N', 'One parent, many children', 'Material and its plant records'],
@@ -775,12 +779,12 @@ export const lessons = [
 ];
 
 export const tracks = [
-  { id: 'all', label: 'All learning', icon: '◈', description: 'Your complete path from SAP basics to governed master data.' },
-  { id: 'Foundations', label: 'Foundations', icon: '01', description: 'SAP, MDG, landscape patterns, and the request journey.' },
-  { id: 'Data modeling', label: 'Data modeling', icon: '02', description: 'Things, fields, links, keys, trees, and custom models.' },
-  { id: 'UI modeling', label: 'UI modeling', icon: '03', description: 'Turn the model into screens people can use.' },
-  { id: 'Process modeling', label: 'Process modeling', icon: '04', description: 'Route requests through checks, reviews, decisions, and go-live.' },
-  { id: 'MDG-M', label: 'MDG-M · Materials', icon: 'M', description: 'Practise a material request from start to finish.' },
-  { id: 'MDG-F', label: 'MDG-F · Financials', icon: 'F', description: 'Practise a financial data request safely.' },
-  { id: 'Practice', label: 'System practice', icon: '↗', description: 'Prepare for the system and record what you see.' }
+  { id: 'all', label: 'All learning', icon: '✨', description: 'Your complete path from SAP basics to governed master data.' },
+  { id: 'Foundations', label: 'Foundations', icon: '🧭', description: 'SAP, MDG, landscape patterns, and the request journey.' },
+  { id: 'Data modeling', label: 'Data modeling', icon: '🧱', description: 'Things, fields, links, keys, trees, and custom models.' },
+  { id: 'UI modeling', label: 'UI modeling', icon: '🎨', description: 'Turn the model into screens people can use.' },
+  { id: 'Process modeling', label: 'Process modeling', icon: '🔁', description: 'Route requests through checks, reviews, decisions, and go-live.' },
+  { id: 'MDG-M', label: 'MDG-M · Materials', icon: '📦', description: 'Practise a material request from start to finish.' },
+  { id: 'MDG-F', label: 'MDG-F · Financials', icon: '💰', description: 'Practise a financial data request safely.' },
+  { id: 'Practice', label: 'System practice', icon: '🖥️', description: 'Prepare for the system and record what you see.' }
 ];

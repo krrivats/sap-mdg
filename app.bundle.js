@@ -97,6 +97,7 @@ const lessons = [
       { k: 'p', t: 'In one line', b: 'A request has six moments: ask, fill, check, review, decide, and go live.' },
       { k: 'example', t: 'A simple example', b: 'Priya asks for a new material. She fills the details. The system checks for missing fields. A data steward reviews it. A manager approves it. Then the material goes live.' },
       { k: 'diagram', name: 'crFlow', caption: 'The six moments of a change request.' },
+      { k: 'sim', name: 'crSim', caption: 'Press Next to move the request. Try Reject at the Decide step, then fix it and send it again.' },
       { k: 'ol', t: 'The six moments', items: [
         'Ask: choose a request type and say why.',
         'Fill: type the new data into the draft area.',
@@ -214,6 +215,7 @@ const lessons = [
       { k: 'p', t: 'In one line', b: 'Type 1 is the main thing. Type 2 and 3 are pick lists. Type 4 is a child that cannot live alone.' },
       { k: 'example', t: 'A simple example', b: 'Material is type 1. It has its own number. Material–Plant is type 4. It only makes sense with a material. Plant is type 3. It is a pick list that already exists outside MDG.' },
       { k: 'diagram', name: 'types', caption: 'The four types at a glance.' },
+      { k: 'sim', name: 'typeSim', caption: 'Pick the right type for six real objects. Get a score at the end.' },
       { k: 'table', t: 'The four types', head: ['Type', 'What it is for', 'Own key?', 'Stored where?', 'Links it can start'], rows: [
         ['1', 'Main objects. More than one is allowed in a model.', 'Yes', 'New tables', 'Leading and referencing only. No qualifying.'],
         ['2', 'Pick lists kept inside MDG. No extra fields.', 'Yes', 'New tables', 'Leading'],
@@ -282,6 +284,7 @@ const lessons = [
       { k: 'p', t: 'In one line', b: 'Leading gives the context. Qualifying adds key fields. Referencing copies a key in as a field.' },
       { k: 'example', t: 'A simple example', b: 'Material → Material–Plant is leading. It says “this plant data belongs to this material”. Plant → Material–Plant is qualifying. It adds plant to the key. A company code field is referencing. It copies the company code key in.' },
       { k: 'diagram', name: 'relationships', caption: 'The three link types in one picture.' },
+      { k: 'sim', name: 'linkSim', caption: 'Turn the links on and watch the Material–Plant key build itself.' },
       { k: 'table', t: 'The three link types', head: ['Type', 'What it does', 'Direction', 'Example'], rows: [
         ['Leading', 'Says which record owns the context. A type 1 can lead a type 1 or a type 4. A type 4 must have a leading type 1.', 'Type 1 → type 1 or 4', 'Material → Material–Plant'],
         ['Qualifying', 'Adds more key fields to the child. Type 2 and 3 can add keys to type 1 and 4. A type 4 key must include at least one type 1, 2, or 3.', 'Type 2/3 → type 1/4', 'Plant → Material–Plant'],
@@ -311,6 +314,7 @@ const lessons = [
       { k: 'p', t: 'In one line', b: 'Read it from the left: “one material has many plant records.”' },
       { k: 'example', t: 'A simple example', b: 'One material can have plant data for Delhi, Mumbai, and Pune. That is 1:N. Each plant record still belongs to one material.' },
       { k: 'diagram', name: 'cardinality', caption: 'Cardinality and the type-4 rule.' },
+      { k: 'sim', name: 'cardSim', caption: 'Choose 1:1 or 1:N, then change how many plant records one material has.' },
       { k: 'table', t: 'The four options', head: ['Cardinality', 'Meaning', 'Example'], rows: [
         ['1:1', 'One on each side', 'A record and its single header'],
         ['1:N', 'One parent, many children', 'Material and its plant records'],
@@ -801,14 +805,14 @@ const lessons = [
 ];
 
 const tracks = [
-  { id: 'all', label: 'All learning', icon: '◈', description: 'Your complete path from SAP basics to governed master data.' },
-  { id: 'Foundations', label: 'Foundations', icon: '01', description: 'SAP, MDG, landscape patterns, and the request journey.' },
-  { id: 'Data modeling', label: 'Data modeling', icon: '02', description: 'Things, fields, links, keys, trees, and custom models.' },
-  { id: 'UI modeling', label: 'UI modeling', icon: '03', description: 'Turn the model into screens people can use.' },
-  { id: 'Process modeling', label: 'Process modeling', icon: '04', description: 'Route requests through checks, reviews, decisions, and go-live.' },
-  { id: 'MDG-M', label: 'MDG-M · Materials', icon: 'M', description: 'Practise a material request from start to finish.' },
-  { id: 'MDG-F', label: 'MDG-F · Financials', icon: 'F', description: 'Practise a financial data request safely.' },
-  { id: 'Practice', label: 'System practice', icon: '↗', description: 'Prepare for the system and record what you see.' }
+  { id: 'all', label: 'All learning', icon: '✨', description: 'Your complete path from SAP basics to governed master data.' },
+  { id: 'Foundations', label: 'Foundations', icon: '🧭', description: 'SAP, MDG, landscape patterns, and the request journey.' },
+  { id: 'Data modeling', label: 'Data modeling', icon: '🧱', description: 'Things, fields, links, keys, trees, and custom models.' },
+  { id: 'UI modeling', label: 'UI modeling', icon: '🎨', description: 'Turn the model into screens people can use.' },
+  { id: 'Process modeling', label: 'Process modeling', icon: '🔁', description: 'Route requests through checks, reviews, decisions, and go-live.' },
+  { id: 'MDG-M', label: 'MDG-M · Materials', icon: '📦', description: 'Practise a material request from start to finish.' },
+  { id: 'MDG-F', label: 'MDG-F · Financials', icon: '💰', description: 'Practise a financial data request safely.' },
+  { id: 'Practice', label: 'System practice', icon: '🖥️', description: 'Prepare for the system and record what you see.' }
 ];
 
 
@@ -1558,6 +1562,192 @@ const prefixes = [
 ];
 
 
+/* src/simulators.js */
+// Interactive learning simulators. Each one is a small game-like model you can click.
+const escSim = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+const CR_STEPS = [
+  { k: 'Request', e: '📝', t: 'Someone asks for a change and says why.' },
+  { k: 'Edit', e: '✏️', t: 'New values go into the draft area. Live data is untouched.' },
+  { k: 'Validate', e: '🔍', t: 'The system runs its checks. A red message stops the request.' },
+  { k: 'Review', e: '👀', t: 'The right team reads the request and the reason.' },
+  { k: 'Decide', e: '⚖️', t: 'The gate. Approve, reject, or send it back.' },
+  { k: 'Go live', e: '🚀', t: 'Approved data becomes live. Other systems can then receive it.' }
+];
+
+const OBJECTS = [
+  { n: 'Material general data', e: '📦', t: 1 },
+  { n: 'Material–Plant data', e: '🔗', t: 4 },
+  { n: 'Plant list (kept outside MDG)', e: '🏭', t: 3 },
+  { n: 'Small priority list (kept inside MDG)', e: '📋', t: 2 },
+  { n: 'Customer general data', e: '🧑‍💼', t: 1 },
+  { n: 'Customer contact rows (only under a customer)', e: '📇', t: 4 }
+];
+const TYPE_WHY = {
+  1: 'Type 1 is the main object. It has its own key and its own tables.',
+  2: 'Type 2 is a pick list kept inside MDG.',
+  3: 'Type 3 is a pick list kept outside MDG.',
+  4: 'Type 4 is child data. It has no key of its own, so it lives under a type 1.'
+};
+
+const sims = {
+  crSim: {
+    init: () => ({ i: 0, rejected: false, note: '' }),
+    body(s) {
+      const live = s.i >= 5;
+      const rail = CR_STEPS.map((st, n) => {
+        const cls = n < s.i ? 'is-done' : n === s.i ? 'is-current' : '';
+        return `<div class="sim-step ${cls}"><span class="se">${st.e}</span>${escSim(st.k)}</div>`;
+      }).join('');
+      const msg = s.rejected
+        ? '↩️ Sent back to the requester. Fix the draft, then send it again.'
+        : live ? '🎉 Live. The business can now use this data.' : CR_STEPS[s.i].t;
+      const cls = s.rejected ? 'is-bad' : live ? 'is-good' : '';
+      return `<div class="sim-rail">${rail}</div>
+        <div class="sim-msg ${cls}">${escSim(msg)}</div>
+        <div class="sim-live">
+          <div class="sim-card"><small>DRAFT AREA</small><b>${live ? 'Empty' : '📝 Bolt A (draft)'}</b></div>
+          <div class="sim-card ${live ? 'sim-pop' : ''}"><small>LIVE AREA</small><b>${live ? '✅ Bolt A' : '—'}</b></div>
+        </div>
+        <div class="sim-btns">
+          <button class="sim-btn ${s.i === 4 && !s.rejected ? 'is-on' : ''}" data-act="next" ${live || s.rejected ? 'disabled' : ''}>${s.i === 4 ? '✅ Approve' : 'Next step ▶'}</button>
+          <button class="sim-btn" data-act="reject" ${s.i === 4 && !s.rejected ? '' : 'disabled'}>✋ Reject</button>
+          <button class="sim-btn" data-act="resubmit" ${s.rejected ? '' : 'disabled'}>🔁 Fix and send again</button>
+          <button class="sim-btn" data-act="reset">↺ Start over</button>
+        </div>`;
+    },
+    act(s, a) {
+      if (a === 'next' && s.i < 5 && !s.rejected) s.i += 1;
+      if (a === 'reject' && s.i === 4) { s.rejected = true; s.i = 1; }
+      if (a === 'resubmit' && s.rejected) { s.rejected = false; s.i = 2; }
+      if (a === 'reset') { s.i = 0; s.rejected = false; }
+    }
+  },
+
+  linkSim: {
+    init: () => ({ lead: false, qual: false, extra: false }),
+    body(s) {
+      const ok = s.lead && s.qual && !s.extra;
+      let msg = 'Turn the links on. A type 4 needs one leading link and one qualifying link.';
+      let cls = '';
+      if (s.extra) { msg = '✋ Only one leading link is allowed. Remove the second one.'; cls = 'is-bad'; }
+      else if (!s.lead) { msg = '✋ A type 4 has no context yet. Add a leading link from Material.'; cls = 'is-bad'; }
+      else if (!s.qual) { msg = '✋ The key has no plant yet. Add a qualifying link from Plant.'; cls = 'is-bad'; }
+      else { msg = '✅ Valid. The Material–Plant key is Material number + Plant.'; cls = 'is-good'; }
+      return `<div class="sim-boxes">
+          <div class="sim-box"><small>TYPE 1</small><b>📦 Material</b><span>key: material no.</span></div>
+          <div class="sim-link">${s.lead ? '━━ leading ━━▶' : '┄┄ no link ┄┄'}</div>
+          <div class="sim-box"><small>TYPE 4</small><b>🔗 Material–Plant</b><span class="sim-key">${ok ? 'MATNR + WERKS' : s.lead ? 'MATNR + ?' : '?'}</span></div>
+          <div class="sim-link">${s.qual ? '◀━━ qualifying ━━' : '◀┄┄ no link ┄┄'}</div>
+          <div class="sim-box"><small>TYPE 3</small><b>🏭 Plant</b><span>key: plant (WERKS)</span></div>
+        </div>
+        <div class="sim-msg ${cls}">${escSim(msg)}</div>
+        <div class="sim-btns">
+          <button class="sim-btn ${s.lead ? 'is-on' : ''}" data-act="lead">📦→🔗 Leading link ${s.lead ? 'on' : 'off'}</button>
+          <button class="sim-btn ${s.qual ? 'is-on' : ''}" data-act="qual">🏭→🔗 Qualifying link ${s.qual ? 'on' : 'off'}</button>
+          <button class="sim-btn ${s.extra ? 'is-on' : ''}" data-act="extra" ${s.lead ? '' : 'disabled'}>➕ Second leading link ${s.extra ? 'on' : 'off'}</button>
+          <button class="sim-btn" data-act="reset">↺ Reset</button>
+        </div>`;
+    },
+    act(s, a) {
+      if (a === 'lead') { s.lead = !s.lead; if (!s.lead) { s.extra = false; } }
+      if (a === 'qual') s.qual = !s.qual;
+      if (a === 'extra' && s.lead) s.extra = !s.extra;
+      if (a === 'reset') { s.lead = false; s.qual = false; s.extra = false; }
+    }
+  },
+
+  typeSim: {
+    init: () => ({ i: 0, score: 0, picked: null }),
+    body(s) {
+      if (s.i >= OBJECTS.length) {
+        const pct = Math.round((s.score / OBJECTS.length) * 100);
+        const note = pct === 100 ? '🏆 Perfect. You can classify entity types.' : pct >= 67 ? '👍 Good. Re-read the cards you missed.' : '📚 Try again. Use the memory hook: 1 Root, 2 In, 3 Out, 4 Under.';
+        return `<div class="sim-final"><div class="sim-score">${s.score} / ${OBJECTS.length}</div><p>${escSim(note)}</p><button class="sim-btn" data-act="restart">↺ Play again</button></div>`;
+      }
+      const o = OBJECTS[s.i];
+      const answered = s.picked !== null;
+      const right = answered && s.picked === o.t;
+      const feedback = answered ? `${right ? '✅ Correct.' : `❌ It is type ${o.t}.`} ${TYPE_WHY[o.t]}` : 'Pick the type. Think: does it have its own key, or does it live under something?';
+      const btns = [1, 2, 3, 4].map((t) => {
+        let cls = '';
+        if (answered && t === o.t) cls = 'is-on';
+        return `<button class="sim-btn ${cls}" data-act="pick" data-t="${t}" ${answered ? 'disabled' : ''}>Type ${t}</button>`;
+      }).join('');
+      return `<div class="sim-progress"><span style="width:${(s.i / OBJECTS.length) * 100}%"></span></div>
+        <div class="sim-object"><span class="sim-emoji">${o.e}</span><b>${escSim(o.n)}</b><small>${s.i + 1} of ${OBJECTS.length} · score ${s.score}</small></div>
+        <div class="sim-btns sim-types">${btns}</div>
+        <div class="sim-msg ${answered ? (right ? 'is-good' : 'is-bad') : ''}">${escSim(feedback)}</div>
+        <div class="sim-btns"><button class="sim-btn" data-act="next" ${answered ? '' : 'disabled'}>Next ▶</button></div>`;
+    },
+    act(s, a, d) {
+      if (a === 'pick' && s.picked === null && s.i < OBJECTS.length) {
+        s.picked = Number(d.t);
+        if (s.picked === OBJECTS[s.i].t) s.score += 1;
+      }
+      if (a === 'next' && s.picked !== null) { s.i += 1; s.picked = null; }
+      if (a === 'restart') { s.i = 0; s.score = 0; s.picked = null; }
+    }
+  },
+
+  cardSim: {
+    init: () => ({ n: 3, mode: '1:N' }),
+    body(s) {
+      const dots = Array.from({ length: s.n }, (_, k) => `<span class="sim-dot" style="animation-delay:${k * 60}ms">🏭</span>`).join('');
+      const bad = s.mode === '1:1' && s.n > 1;
+      const msg = bad ? '✋ 1:1 allows only one plant record for this material. Choose 1:N or lower the number.' : s.mode === '1:1' ? '✅ One material, one record. That is 1:1.' : `✅ One material, ${s.n} plant records. That is 1:N.`;
+      return `<div class="sim-boxes"><div class="sim-box"><small>FROM</small><b>📦 Material</b></div><div class="sim-link">${s.mode}</div></div>
+        <div class="sim-dots">${dots}</div>
+        <div class="sim-msg ${bad ? 'is-bad' : 'is-good'}">${escSim(msg)}</div>
+        <label class="sim-label">How many plant records: <b>${s.n}</b>
+          <input class="sim-range" type="range" min="1" max="6" value="${s.n}" data-input="n" aria-label="Number of plant records"></label>
+        <div class="sim-btns">
+          <button class="sim-btn ${s.mode === '1:1' ? 'is-on' : ''}" data-act="mode" data-m="1:1">1:1 one to one</button>
+          <button class="sim-btn ${s.mode === '1:N' ? 'is-on' : ''}" data-act="mode" data-m="1:N">1:N one to many</button>
+        </div>`;
+    },
+    act(s, a, d) {
+      if (a === 'mode') s.mode = d.m;
+    },
+    input(s, k, v, el) {
+      if (k !== 'n') return;
+      s.n = Number(v);
+      const dots = Array.from({ length: s.n }, (_, i) => `<span class="sim-dot">🏭</span>`).join('');
+      el.querySelector('.sim-dots').innerHTML = dots;
+      el.querySelector('.sim-label b').textContent = String(s.n);
+      const bad = s.mode === '1:1' && s.n > 1;
+      const msg = bad ? '✋ 1:1 allows only one plant record for this material. Choose 1:N or lower the number.' : s.mode === '1:1' ? '✅ One material, one record. That is 1:1.' : `✅ One material, ${s.n} plant records. That is 1:N.`;
+      const m = el.querySelector('.sim-msg');
+      m.className = `sim-msg ${bad ? 'is-bad' : 'is-good'}`;
+      m.textContent = msg;
+      return false;
+    }
+  }
+};
+
+function initSims(root) {
+  root.querySelectorAll('[data-sim]').forEach((el) => {
+    const sim = sims[el.dataset.sim];
+    if (!sim) return;
+    const state = sim.init();
+    const paint = () => { el.querySelector('.sim-body').innerHTML = sim.body(state); };
+    el.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-act]');
+      if (!btn || btn.disabled) return;
+      sim.act(state, btn.dataset.act, btn.dataset);
+      paint();
+    });
+    el.addEventListener('input', (e) => {
+      if (e.target.dataset.input && sim.input) {
+        const repaint = sim.input(state, e.target.dataset.input, e.target.value, el);
+        if (repaint !== false) paint();
+      }
+    });
+    paint();
+  });
+}
+
+
 /* src/diagrams.js */
 // Inline SVG diagrams. No external files, no network, works on GitHub Pages.
 const C = {
@@ -1900,6 +2090,8 @@ function block(b, i) {
       const icon = { why: '💡', tip: '🧠', warn: '⚠️', exam: '🎯' }[b.tone] || '📌';
       return `<aside class="note note-${esc(b.tone)}"><span class="note-icon" aria-hidden="true">${icon}</span><div><strong>${esc(b.t)}</strong><p>${esc(b.b)}</p></div></aside>`;
     }
+    case 'sim':
+      return `<section class="block sim-block"><h2>🎮 Try it yourself</h2><p class="sim-caption">${esc(b.caption ?? '')}</p><div class="sim" data-sim="${esc(b.name)}"><div class="sim-body"></div></div></section>`;
     case 'example':
       return `<aside class="example" id="${id}"><span class="example-icon" aria-hidden="true">🌰</span><div><strong>${esc(b.t || 'Example')}</strong><p>${esc(b.b)}</p></div></aside>`;
     case 'diagram':
@@ -1937,7 +2129,7 @@ function lessonCard(item, index) {
   const done = state.completed.includes(item.id);
   return `<button class="lesson-card ${done ? 'is-done' : ''}" type="button" data-lesson="${esc(item.id)}">
     <span class="lesson-number">${String(index + 1).padStart(2, '0')}</span>
-    <span class="lesson-card-copy"><span class="lesson-card-title">${esc(item.title)}</span><span class="lesson-card-meta">${esc(item.track)} <i>·</i> ${esc(item.duration)}</span></span>
+    <span class="lesson-card-copy"><span class="lesson-card-title">${esc(item.title)}</span><span class="lesson-card-meta">${esc(tracks.find((t) => t.id === item.track)?.icon ?? '📘')} ${esc(item.track)} <i>·</i> ⏱ ${esc(item.duration)}</span></span>
     <span class="lesson-status" aria-label="${done ? 'Completed' : 'Not completed'}">${done ? '✓' : '↗'}</span>
   </button>`;
 }
@@ -2030,6 +2222,7 @@ function renderLesson(item) {
       </aside>
     </div>
   </article>`;
+  initSims(appContent);
   document.querySelector('#back-to-module').addEventListener('click', () => { selectedTrack = item.track; view = 'overview'; render(); });
   const notes = document.querySelector('#lesson-notes');
   notes.value = state.notes[item.id] ?? '';
@@ -2354,6 +2547,15 @@ document.addEventListener('keydown', (e) => {
   if (e.key === '/' && !typing) { e.preventDefault(); searchInput.focus(); }
   if (e.key === 'Escape' && document.activeElement === searchInput) { searchInput.value = ''; query = ''; view = 'overview'; searchInput.blur(); render(); }
 });
+
+const readBar = document.querySelector('#read-bar');
+const toTop = document.querySelector('#to-top');
+window.addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  if (readBar) readBar.style.width = `${max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0}%`;
+  if (toTop) toTop.hidden = window.scrollY < 500;
+}, { passive: true });
+if (toTop) toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 applyTheme();
 render();

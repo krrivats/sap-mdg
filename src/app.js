@@ -2,6 +2,7 @@ import { lessons, tracks } from './content.js';
 import { interviewQuestions, interviewTracks } from './interview.js';
 import { simpleById } from './interview-simple.js';
 import { codeAreas, tcodes, imgPaths, keywords, prefixes } from './codes.js';
+import { initSims } from './simulators.js';
 import { findLesson, searchLessons, summarizeProgress } from './learning.js';
 import { renderDiagram } from './diagrams.js';
 
@@ -102,6 +103,8 @@ function block(b, i) {
       const icon = { why: '💡', tip: '🧠', warn: '⚠️', exam: '🎯' }[b.tone] || '📌';
       return `<aside class="note note-${esc(b.tone)}"><span class="note-icon" aria-hidden="true">${icon}</span><div><strong>${esc(b.t)}</strong><p>${esc(b.b)}</p></div></aside>`;
     }
+    case 'sim':
+      return `<section class="block sim-block"><h2>🎮 Try it yourself</h2><p class="sim-caption">${esc(b.caption ?? '')}</p><div class="sim" data-sim="${esc(b.name)}"><div class="sim-body"></div></div></section>`;
     case 'example':
       return `<aside class="example" id="${id}"><span class="example-icon" aria-hidden="true">🌰</span><div><strong>${esc(b.t || 'Example')}</strong><p>${esc(b.b)}</p></div></aside>`;
     case 'diagram':
@@ -139,7 +142,7 @@ function lessonCard(item, index) {
   const done = state.completed.includes(item.id);
   return `<button class="lesson-card ${done ? 'is-done' : ''}" type="button" data-lesson="${esc(item.id)}">
     <span class="lesson-number">${String(index + 1).padStart(2, '0')}</span>
-    <span class="lesson-card-copy"><span class="lesson-card-title">${esc(item.title)}</span><span class="lesson-card-meta">${esc(item.track)} <i>·</i> ${esc(item.duration)}</span></span>
+    <span class="lesson-card-copy"><span class="lesson-card-title">${esc(item.title)}</span><span class="lesson-card-meta">${esc(tracks.find((t) => t.id === item.track)?.icon ?? '📘')} ${esc(item.track)} <i>·</i> ⏱ ${esc(item.duration)}</span></span>
     <span class="lesson-status" aria-label="${done ? 'Completed' : 'Not completed'}">${done ? '✓' : '↗'}</span>
   </button>`;
 }
@@ -232,6 +235,7 @@ function renderLesson(item) {
       </aside>
     </div>
   </article>`;
+  initSims(appContent);
   document.querySelector('#back-to-module').addEventListener('click', () => { selectedTrack = item.track; view = 'overview'; render(); });
   const notes = document.querySelector('#lesson-notes');
   notes.value = state.notes[item.id] ?? '';
@@ -556,6 +560,15 @@ document.addEventListener('keydown', (e) => {
   if (e.key === '/' && !typing) { e.preventDefault(); searchInput.focus(); }
   if (e.key === 'Escape' && document.activeElement === searchInput) { searchInput.value = ''; query = ''; view = 'overview'; searchInput.blur(); render(); }
 });
+
+const readBar = document.querySelector('#read-bar');
+const toTop = document.querySelector('#to-top');
+window.addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  if (readBar) readBar.style.width = `${max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0}%`;
+  if (toTop) toTop.hidden = window.scrollY < 500;
+}, { passive: true });
+if (toTop) toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 applyTheme();
 render();
