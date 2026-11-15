@@ -23,6 +23,8 @@ npm test        # unit tests for search, progress, and the interview bank
 - **Deep data modeling**: model anatomy, reuse vs flex, the four storage/use types, attributes, leading/qualifying/referencing relationships, cardinality and type-4 rules, associations, hierarchies, check tables and search helps, SPRO steps, a worked example, and a review checklist.
 - **Interview Q&A tab**: 83 questions, filterable by topic, searchable, with plain-English answers, a real example, and a memory trick. Flashcard-style reveal, "show all", shuffle, and mark-as-mastered.
 - **19 inline SVG diagrams** (no external assets), so it still works on GitHub Pages.
+- **Mobile-first**: compact layout, slide-in menu drawer, bottom tab bar (Home / Learn / Interview / Search), swipeable diagrams, and 16px inputs so iOS does not auto-zoom.
+- **Mobile-first layout**: slide-in module drawer, bottom tab bar (Home / Learn / Interview / Search), compact cards, and 16px inputs so iOS does not auto-zoom.
 - **Dark and light themes**, persisted locally.
 - **Command palette** (`Ctrl/Cmd + K`) to jump to any lesson or interview question.
 - **Progress ring**, lesson completion, and field notes saved in `localStorage`.

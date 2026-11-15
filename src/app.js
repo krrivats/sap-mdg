@@ -45,8 +45,15 @@ function slug(text) {
 }
 function applyTheme() {
   document.documentElement.dataset.theme = state.theme;
-  document.querySelector('#theme-toggle').textContent = state.theme === 'dark' ? '☀' : '◐';
+  const icon = state.theme === 'dark' ? '☀' : '◐';
+  document.querySelector('#theme-toggle').textContent = icon;
+  const mobile = document.querySelector('#mobile-theme');
+  if (mobile) mobile.textContent = icon;
   document.querySelector('meta[name="theme-color"]').setAttribute('content', state.theme === 'dark' ? '#0f1014' : '#f6f5ef');
+}
+function toggleTheme() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  saveState(); applyTheme();
 }
 function updateProgress() {
   const p = summarizeProgress(lessons, state.completed);
@@ -68,7 +75,7 @@ function renderNavigation() {
     </button>`;
   }).join('');
   nav.querySelectorAll('[data-track]').forEach((b) => b.addEventListener('click', () => {
-    selectedTrack = b.dataset.track; query = ''; searchInput.value = ''; view = 'overview'; render();
+    selectedTrack = b.dataset.track; query = ''; searchInput.value = ''; view = 'overview'; closeDrawer(); render();
   }));
   document.querySelector('#open-interview').classList.toggle('is-active', view === 'interview');
 }
@@ -90,7 +97,7 @@ function block(b, i) {
       return `<aside class="note note-${esc(b.tone)}"><span class="note-icon" aria-hidden="true">${icon}</span><div><strong>${esc(b.t)}</strong><p>${esc(b.b)}</p></div></aside>`;
     }
     case 'diagram':
-      return `<figure class="diagram" id="${id}">${renderDiagram(b.name)}<figcaption>${esc(b.caption)}</figcaption></figure>`;
+      return `<figure class="diagram" id="${id}"><div class="diagram-scroll">${renderDiagram(b.name)}</div><figcaption>${esc(b.caption)}</figcaption></figure>`;
     case 'compare':
       return `<section class="block" id="${id}"><h2>${esc(b.t)}</h2><div class="compare">${b.cols.map((c) => `<div class="compare-col"><h3>${esc(c.h)}</h3><ul>${c.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div></section>`;
     case 'terms':
@@ -129,6 +136,21 @@ function lessonCard(item, index) {
   </button>`;
 }
 
+let quickId = null;
+function pickQuick() {
+  quickId = interviewQuestions[Math.floor(Math.random() * interviewQuestions.length)].id;
+}
+function quickRecallCard() {
+  if (!quickId) pickQuick();
+  const q = interviewQuestions.find((x) => x.id === quickId) ?? interviewQuestions[0];
+  return `<section class="quick-recall">
+    <div class="qr-top"><p class="eyebrow">3-MINUTE RECALL</p><span class="qr-tag">${esc(q.track)}</span></div>
+    <h2>${esc(q.q)}</h2>
+    <details class="qa qa-dark"><summary>Reveal answer</summary><p>${esc(q.a)}</p><p class="qr-trick">🧠 ${esc(q.trick)}</p></details>
+    <div class="qr-actions"><button type="button" class="button button-ghost" id="quick-another">🔀 Another question</button><button type="button" class="text-button qr-open" id="quick-open">Open interview bank →</button></div>
+  </section>`;
+}
+
 function renderOverview() {
   const p = summarizeProgress(lessons, state.completed);
   const filtered = searchLessons(lessons, query);
@@ -144,6 +166,7 @@ function renderOverview() {
   </section>
   ${selectedTrack === 'all' && !query ? `<section class="continue-card"><div class="continue-art" aria-hidden="true"><span>MDG</span><i></i><i></i><i></i></div><div class="continue-copy"><p class="eyebrow">PICK UP WHERE YOU LEFT OFF</p><h2>${esc(current.title)}</h2><p>${esc(current.intro)}</p></div><button type="button" class="button button-dark" data-lesson="${esc(current.id)}">Open lesson <span aria-hidden="true">→</span></button></section>
   <section class="tomorrow-banner"><span class="tomorrow-icon" aria-hidden="true">✳</span><div><strong>Tomorrow in your SAP system</strong><p>Start with the system-orientation checklist. Confirm your system and training scope before making changes.</p></div><button type="button" class="text-button" data-lesson="tomorrow-checklist">Open checklist <span aria-hidden="true">→</span></button></section>
+  ${quickRecallCard()}
   <section class="track-overview"><div class="section-heading"><div><p class="eyebrow">THE LEARNING PATH</p><h2>Build understanding, one layer at a time</h2></div><span>${lessons.length} lessons</span></div><div class="track-grid">${tracks.filter((t) => t.id !== 'all').map((t) => {
     const count = lessons.filter((l) => l.track === t.id).length;
     return `<button type="button" class="track-card" data-track="${esc(t.id)}"><span class="track-card-icon">${esc(t.icon)}</span><span class="track-card-title">${esc(t.label)}</span><span class="track-card-description">${esc(t.description)}</span><span class="track-card-count">${count} ${count === 1 ? 'lesson' : 'lessons'} <b aria-hidden="true">↗</b></span></button>`;
@@ -154,6 +177,10 @@ function renderOverview() {
   appContent.querySelectorAll('[data-track]').forEach((b) => b.addEventListener('click', () => { selectedTrack = b.dataset.track; query = ''; searchInput.value = ''; view = 'overview'; render(); }));
   const heroInterview = document.querySelector('#hero-interview');
   if (heroInterview) heroInterview.addEventListener('click', () => openInterview());
+  const quickAnother = document.querySelector('#quick-another');
+  if (quickAnother) quickAnother.addEventListener('click', () => { pickQuick(); render(); });
+  const quickOpen = document.querySelector('#quick-open');
+  if (quickOpen) quickOpen.addEventListener('click', () => openInterview(quickId));
 }
 
 /* ── Lesson ──────────────────────────────────────────────────── */
@@ -163,6 +190,7 @@ function openLesson(id) {
   state.activeLesson = item.id;
   saveState();
   view = 'lesson';
+  closeDrawer();
   render();
   window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
 }
@@ -172,6 +200,7 @@ function renderLesson(item) {
   const index = lessons.findIndex((l) => l.id === item.id);
   const done = state.completed.includes(item.id);
   const toc = item.sections.filter((b) => b.t && b.k !== 'note' && b.k !== 'mnemonic').map((b) => ({ id: `sec-${slug(b.t)}`, t: b.t }));
+  const mobileToc = toc.length ? `<details class="mobile-toc"><summary>📑 In this lesson</summary><div class="mobile-toc-links"><a href="#practice">Hands-on</a>${toc.map((x) => `<a href="#${x.id}">${esc(x.t)}</a>`).join('')}</div></details>` : '';
   appContent.innerHTML = `<article class="lesson-page">
     <button class="back-link" type="button" id="back-to-module"><span aria-hidden="true">←</span> Back to ${esc(item.track)}</button>
     <header class="lesson-header">
@@ -181,12 +210,13 @@ function renderLesson(item) {
     </header>
     <div class="lesson-layout">
       <div class="lesson-body">
+        ${mobileToc}
         ${item.sections.map(block).join('')}
         ${practiceCard(item.practice)}
         ${recallCard(item.recall)}
         ${interviewCard(item.interview)}
         <section class="notes-panel"><label for="lesson-notes"><span class="eyebrow">YOUR FIELD NOTES</span><span class="notes-hint">Saved on this device</span></label><textarea id="lesson-notes" rows="4" placeholder="What did you observe? What do you want to ask? Explain it in your own words…"></textarea><span class="save-status" id="save-status" role="status" aria-live="polite">Notes are stored locally in this browser.</span></section>
-        <div class="lesson-actions"><button class="button ${done ? 'button-complete' : 'button-dark'}" type="button" id="complete-lesson">${done ? '✓ Completed · mark to revisit' : 'Mark lesson complete'}</button><span>Completion is saved in this browser.</span></div>
+        <div class="lesson-actions"><button class="button ${done ? 'button-complete' : 'button-dark'}" type="button" id="complete-lesson">${done ? '✓ Completed · mark to revisit' : 'Mark lesson complete'}</button><span>Completion is saved in this browser.</span><button class="button button-ghost mobile-next" type="button" id="next-lesson-mobile">Next lesson →</button></div>
       </div>
       <aside class="lesson-aside">
         <div class="aside-card"><p class="eyebrow">LESSON ${String(index + 1).padStart(2, '0')} / ${String(lessons.length).padStart(2, '0')}</p><strong>${esc(item.track)}</strong><span>${esc(item.duration)} read</span>${toc.length ? `<hr><p class="toc-label">IN THIS LESSON</p><a class="toc-link" href="#practice">Hands-on</a>${toc.map((x) => `<a class="toc-link" href="#${x.id}">${esc(x.t)}</a>`).join('')}` : ''}<hr><p>Remember the loop</p><div class="memory-loop"><span>WHAT</span><b>→</b><span>WHY</span><b>→</b><span>HOW</span></div><small>Explain it simply. Connect it to a real task. Then check it in the system.</small></div>
@@ -210,6 +240,8 @@ function renderLesson(item) {
     saveState(); render();
   });
   document.querySelector('#next-lesson').addEventListener('click', () => index < lessons.length - 1 ? openLesson(lessons[index + 1].id) : goHome());
+  const mobileNext = document.querySelector('#next-lesson-mobile');
+  if (mobileNext) mobileNext.addEventListener('click', () => index < lessons.length - 1 ? openLesson(lessons[index + 1].id) : goHome());
 }
 
 /* ── Interview bank ──────────────────────────────────────────── */
@@ -218,6 +250,7 @@ function openInterview(id) {
   iqQuery = '';
   iqTrack = 'All topics';
   iqHighlight = id ?? null;
+  closeDrawer();
   render();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -335,6 +368,7 @@ function goHome() { view = 'overview'; selectedTrack = 'all'; query = ''; search
 function render() {
   renderNavigation();
   updateProgress();
+  updateBottomNav();
   if (view === 'interview') { renderInterview(); return; }
   if (view === 'lesson') {
     const item = findLesson(lessons, state.activeLesson);
@@ -344,17 +378,57 @@ function render() {
 }
 
 searchInput.addEventListener('input', () => { query = searchInput.value; selectedTrack = 'all'; view = 'overview'; render(); searchInput.focus(); });
-document.querySelector('.brand').addEventListener('click', (e) => { e.preventDefault(); goHome(); });
+document.querySelector('.brand').addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); goHome(); });
+const mobileBrand = document.querySelector('.mobile-brand');
+if (mobileBrand) mobileBrand.addEventListener('click', (e) => { e.preventDefault(); closeDrawer(); goHome(); });
 document.querySelector('#open-interview').addEventListener('click', () => openInterview());
-document.querySelector('#theme-toggle').addEventListener('click', () => {
-  state.theme = state.theme === 'dark' ? 'light' : 'dark';
-  saveState(); applyTheme();
-});
+document.querySelector('#theme-toggle').addEventListener('click', toggleTheme);
+const mobileTheme = document.querySelector('#mobile-theme');
+if (mobileTheme) mobileTheme.addEventListener('click', toggleTheme);
+
+/* Mobile drawer + bottom navigation */
+const sidebar = document.querySelector('.sidebar');
+const scrim = document.querySelector('#drawer-scrim');
+const menuButton = document.querySelector('#mobile-menu');
+function openDrawer() {
+  sidebar.classList.add('is-open');
+  scrim.hidden = false;
+  menuButton.setAttribute('aria-expanded', 'true');
+  document.body.classList.add('drawer-open');
+}
+function closeDrawer() {
+  if (!sidebar.classList.contains('is-open')) return;
+  sidebar.classList.remove('is-open');
+  scrim.hidden = true;
+  menuButton.setAttribute('aria-expanded', 'false');
+  document.body.classList.remove('drawer-open');
+}
+if (menuButton) menuButton.addEventListener('click', () => sidebar.classList.contains('is-open') ? closeDrawer() : openDrawer());
+if (scrim) scrim.addEventListener('click', closeDrawer);
+const mobileSearch = document.querySelector('#mobile-search');
+if (mobileSearch) mobileSearch.addEventListener('click', () => openPalette());
+
+function updateBottomNav() {
+  document.querySelectorAll('[data-nav]').forEach((b) => {
+    const n = b.dataset.nav;
+    const active = (n === 'home' && view === 'overview') || (n === 'learn' && view === 'lesson') || (n === 'interview' && view === 'interview');
+    b.classList.toggle('is-active', active);
+  });
+}
+document.querySelectorAll('[data-nav]').forEach((b) => b.addEventListener('click', () => {
+  const nav = b.dataset.nav;
+  closeDrawer();
+  if (nav === 'home') goHome();
+  else if (nav === 'learn') { if (view === 'lesson') render(); else openLesson(state.activeLesson || lessons[0].id); }
+  else if (nav === 'interview') openInterview();
+  else if (nav === 'search') openPalette();
+}));
 document.querySelector('#palette-open').addEventListener('click', openPalette);
 paletteInput.addEventListener('input', () => renderPalette(paletteInput.value));
 palette.addEventListener('click', (e) => { if (e.target === palette) closePalette(); });
 
 document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && sidebar.classList.contains('is-open')) { e.preventDefault(); closeDrawer(); return; }
   const typing = ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName);
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); palette.hidden ? openPalette() : closePalette(); return; }
   if (!palette.hidden) {
